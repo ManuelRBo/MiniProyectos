@@ -1,0 +1,30 @@
+@mixin telefono{
+    @media (min-width: #{$movil}) {
+        @content;
+    }
+}
+
+@mixin desktop{
+    @media (min-width: #{$desktop}) {
+        @content;
+    }
+}
+
+@mixin tarjeta($display){
+    width: 95%;
+    max-width: 40rem;
+    display: $display;
+    background-color: $azulOscuro;
+    margin: auto;
+    margin-top: 25vh;
+    padding: 2rem;
+    border-radius: 10px;
+
+    @include telefono(){
+        p{
+            font-size: $tamañoP;
+            line-height: 2.5rem;
+        }
+    }
+}
+

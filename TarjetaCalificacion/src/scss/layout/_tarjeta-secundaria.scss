@@ -1,0 +1,33 @@
+.tarjeta-thank{
+    @include tarjeta(none);
+    
+
+    h1{
+        text-align: center;
+    }
+
+    .calificacion{
+        width: 14rem;
+        margin: auto;
+        margin-top: 2rem;
+        background-color: hsl(213, 19%, 22%);
+        border-radius: 2rem;
+        p{
+            color: $primario;
+            padding: 0.2rem;
+        }
+
+        @include telefono(){
+            width: 20rem;
+        }
+    }
+
+    p{
+        text-align: center;
+    }
+}
+
+.dibujo{
+    display: flex;
+    justify-content: center;
+}

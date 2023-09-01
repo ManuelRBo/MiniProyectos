@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@400;700&display=swap');
+
+//Fuente
+$fuente_principal: 'Overpass', sans-serif;
+
+//Tamaño de dispositivos
+$movil : 375px;
+$desktop : 1100px;
+
+//Colores
+$primario : hsl(25, 80%, 53%);
+$blanco : hsl(0, 0%, 100%);
+$grisClaro : hsl(217, 12%, 63%);
+$grisOscuro : hsl(216, 12%, 54%);
+$azulOscuro : hsl(213, 19%, 18%);
+$azulMuyOscuro : hsl(216, 12%, 8%);
+
+//Tamaño fuente (parrafos)
+$tamañoP : 15px;

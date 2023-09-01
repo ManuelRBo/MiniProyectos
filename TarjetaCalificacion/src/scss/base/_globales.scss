@@ -1,0 +1,26 @@
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+    width: 100%;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body{
+    background-color: $azulMuyOscuro;
+}
+
+p{
+    font-family: $fuente_principal;
+    font-size: 12px;
+    font-weight: lighter;
+    color: $grisClaro;
+    margin: 0;
+    line-height: 2rem;
+}
+
+h1{
+    font-family: $fuente_principal;
+    color: $blanco;
+}
