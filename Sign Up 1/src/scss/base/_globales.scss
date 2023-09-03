@@ -1,0 +1,21 @@
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+body{
+    background-image: url(/build/img/bg-intro-desktop.png);
+    background-color: $rojo;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+p{
+    font-size: $tamanoFuente;
+    font-family: $font;
+}

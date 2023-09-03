@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="stylesheet" href="build/css/app.css">
+  
+  <title>Frontend Mentor | Intro component with sign up form</title>
+
+</head>
+<body>
+  <div class="contenedor">
+    <div class="contenedor-titulo">
+      <h1>Learn to code by watching others</h1>
+      <p>
+        See how experienced developers solve problems in real-time. Watching scripted tutorials is great,
+        but understanding how developers think is invaluable.
+      </p>
+    </div>
+    <div class="contenedor-formulario">
+      <div class="free"><p><span>Try it free 7 days</span> then $20/mo. thereafter</p></div>
+      <form class="formulario" id="formulario">
+        <div class="error">
+          <input type="text" placeholder="First Name" id="First Name">
+          <div class="error-imagen"></div>
+          <p class="error-texto"></p>
+        </div>
+        <div class="error">
+          <input type="text" placeholder="Last Name" id="Last Name">
+          <div class="error-imagen"></div>
+          <p class="error-texto"></p>
+        </div>
+        <div class="error">
+          <input type="text" placeholder="Email Address" id="Email">
+          <div class="error-imagen"></div>
+          <p class="error-texto"></p>
+        </div>
+        <div class="error">
+          <input type="password" placeholder="Password" id="Password">
+          <div class="error-imagen"></div>
+          <p class="error-texto"></p>
+        </div>
+        <button type="submit" id="boton">Claim your free trial</button>
+        <p>By clicking the button, you are agreeing to our <span>Terms and Services</span></p>
+      </form>
+    </div>
+  </div>
+  
+  <script src="build/js/bundle.min.js"></script>
+</body>
+</html>

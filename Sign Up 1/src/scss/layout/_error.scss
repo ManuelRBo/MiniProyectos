@@ -1,0 +1,30 @@
+.activo{
+    position: relative;
+    margin-bottom: 20px;
+
+    input{
+        border: 2px solid $rojo;
+
+        &::placeholder{
+            all: initial;
+            font-size: 0;
+        }
+    }
+
+    .error-imagen{
+        position: absolute;
+        background-image: url(/build/img/icon-error.svg);
+        height: 24px;
+        width: 24px;
+        right: 30px;
+        top: 15px;
+    }
+
+    .error-texto{
+        position: absolute;
+        right: 0;
+        top: 40px;
+        color: $rojo;
+        font-style: italic;
+    }
+}

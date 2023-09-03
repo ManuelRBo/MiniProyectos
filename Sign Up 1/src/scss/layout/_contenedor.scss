@@ -1,0 +1,62 @@
+@include desktop(){
+     h1{
+        font-size: 5rem;
+     }
+}
+
+.contenedor{
+    width: 85%;
+    margin: auto;
+    height: 100vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .contenedor-titulo{
+        width: 50rem;
+
+        h1{
+            font-family: $font;
+            color: white;
+        }
+
+        p{
+            color: white;
+        }
+    }
+
+    .contenedor-formulario{
+        width: 55rem;
+    }
+}
+
+@include tablet(){
+    .contenedor{
+        margin-bottom: 5rem;
+        height: auto;
+    }
+
+    .contenedor-titulo{
+        text-align: center;
+    }
+
+    h1{
+        font-size: 5rem;
+        text-align: center;
+    }
+}
+
+@include movil(){
+    .contenedor{
+        margin-top: 5rem;
+    }
+    h1{
+        font-size: 3rem;
+    }
+    .contenedor-titulo{
+        p{
+            margin-bottom: 5rem;
+        }
+    }
+}
