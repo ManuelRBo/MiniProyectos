@@ -1,0 +1,16 @@
+.resultado{
+    font-family: $fuente;
+    font-style: italic;
+    font-size: 5.5rem;
+    font-weight: 900;
+
+    span{
+        color: $morado;
+    }
+}
+
+@include tablet(){
+    .resultado{
+        font-size: 6.4rem;
+    }
+}

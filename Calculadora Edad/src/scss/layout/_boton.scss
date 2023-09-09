@@ -1,0 +1,50 @@
+.boton{
+    position: relative;
+    margin-bottom: 2rem;
+    
+    .imagen{
+        margin: auto;
+        display: flex;
+        position: relative;
+        background-color: $morado;
+        width: 6.5rem;
+        height: 6.5rem;
+        border-radius: 50%;
+        z-index: 1;
+        border: none;
+        img{
+            width: 2.5rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        &:hover{
+            background-color: $blackOff;
+            cursor: pointer;
+        }
+    }
+
+}
+
+.linea{
+    width: 100%;
+    height: 1px;
+    background-color: $grisClaro;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@include tablet(){
+    .boton{
+        margin-bottom: 0;
+    }
+
+    .imagen{
+        left: 21rem;
+    }
+    
+}
