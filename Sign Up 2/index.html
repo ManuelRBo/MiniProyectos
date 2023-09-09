@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./dist/img/favicon-32x32.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dist/css/style.css">
+  
+  <title>Frontend Mentor | Newsletter sign-up form with success message</title>
+
+</head>
+<body class="bg-grisOscuro">
+
+  <!-- Sign-up form start -->
+    <div class="bg-blanco w-full tablet:flex tablet:flex-row-reverse tablet:w-[100%] tablet:my-28 desktop:w-[950px] desktop:m-auto desktop:my-32 desktop:rounded-[30px] desktop:p-6 desktop:gap-3" id="tarjeta-delante">
+      <div class="bg-[url(/dist/img/illustration-sign-up-mobile.svg)] w-[375px] bg-no-repeat m-auto h-[284px]
+      tablet:bg-fondoDesktop tablet:w-[400px] tablet:h-[593px]"></div>
+      <div class="text-start p-7 m-auto text-sizeP font-roboto text-grisCharcoal desktop:w-[26rem]">
+        <h1 class="text-grisCharcoal font-bold text-[2.6rem] mb-4 tablet:text-[3.5rem]">Stay updated!</h1>
+        <p class="mb-7">Join 60,000+ product managers receiving monthly updates on:</p>
+        <ul class="flex flex-col gap-3 mb-10 relative">
+          <li class="flex gap-4 ml-10"><img src="/dist/img/icon-list.svg" width="23px" class="absolute left-0">Product discovery and building what matters</li>
+          <li class="flex gap-4 ml-10"><img src="/dist/img/icon-list.svg" width="23px" class="absolute left-0">Measuring to ensure updates are a success</li>
+          <li class="flex gap-4 ml-10"><img src="/dist/img/icon-list.svg" width="23px" class="absolute left-0">And much more!</li>
+        </ul>
+        
+        <form class="flex flex-col">
+          <div class="flex gap-28 text-sm font-[700] mb-2 tablet:gap-36">
+            <label>Email address</label>
+            <label class="text-red-500 hidden" id="label">Valid email required</label>
+          </div>
+          <input type="email" placeholder="email@company.com" class="border-gris border rounded-md p-4 mb-6" id="email"></input>
+          <button id="boton" type="submit" class="bg-grisOscuro text-blanco p-4  rounded-md hover:bg-gradient-to-r from-tomato to-orange-400 brightness-110 hover:shadow-2xl hover:drop-shadow-xl">Subscribe to monthly newsletter</button>
+        </form>
+      </div>
+    </div>
+    <!-- Sign-up form end -->
+
+    <!-- Success message start -->
+    <div class="bg-blanco px-5 tablet:w-[500px] tablet:m-auto tablet:rounded-[30px] tablet:p-16 tablet:my-32 desktop:my-44 hidden" id="tarjeta-trasera">
+        <img src="/dist/img/icon-success.svg" width="64" class="mb-9 pt-44 tablet:pt-0">
+        <h1 class="text-grisCharcoal font-bold text-[3.5rem] font-roboto leading-[1.1] mb-6">Thanks for subscribing!</h1>
+        <p class="text-left font-roboto mb-[14.58rem] w-full tablet:mb-11">
+          A confirmation email has been sent to <span id="emailEnviado" class="font-bold text-grisCharcoal">dragonfire069@gmail.com</span>.
+          Please open it and click the button inside to confirm your subscription.
+        </p>
+        <button id="boton-gracias" class="bg-grisOscuro mb-9 tablet:mb-0 tablet:p-4 w-full m-auto font-bold text-blanco p-4 rounded-md hover:bg-gradient-to-r from-tomato to-orange-400 brightness-110 hover:shadow-2xl hover:drop-shadow-xl">Dismiss message</button>
+      </div>
+
+    <script src="/dist/js/bundle.min.js"></script>
+</body>
+</html>
