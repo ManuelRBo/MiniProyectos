@@ -16,7 +16,7 @@ function calcularEdad() {
 // Objetivo: calcular los años de una persona
 function calcularAños(anioActual, diaActual, mesActual) {
   let años = 0;
-  if(dia.value > diaActual || mes.value > mesActual){
+  if(dia.value > diaActual && mes.value > mesActual){
     años = anioActual - anio.value - 1;
   }else{
     años = anioActual - anio.value;
