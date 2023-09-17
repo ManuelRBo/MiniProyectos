@@ -1,0 +1,208 @@
+.contenedor{
+    background-image: url(/public/images/bg-main-mobile.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 220px;
+}
+
+.contenedor-img{
+     width: 90%;
+     max-width: 330px;
+     margin: auto;
+     position: relative;
+}
+
+.tarjeta-trasera{
+    position: absolute;
+    right: 0;
+    top: 30px;
+}
+
+.tarjeta-delantera{
+    position: absolute;
+    right: 76px;
+    top: 85px;
+}
+
+.logo-tarjeta{
+    position: absolute;
+    left: 15px;
+    top: 15px;
+}
+
+.numero-secreto-trasero{
+    margin: 0;
+    position: absolute;
+    top: 60px;
+    right: 35px;
+    color: hsl(0, 0%, 100%);
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.numero-tarjeta{
+    margin: 0;
+    position: absolute;
+    bottom: 55px;
+    left: 20px;
+    color: hsl(0, 0%, 100%);
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+.tarjeta-nombre-persona{
+    margin: 0;
+    position: absolute;
+    bottom: 25px;
+    left: 20px;
+    color: hsl(0, 0%, 100%);
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.fecha-caducidad{
+    margin: 0;
+    position: absolute;
+    bottom: 25px;
+    right: 20px;
+    color: hsl(0, 0%, 100%);
+    font-size: 10px;
+}
+
+@media (min-width:1024px){
+    .contenedor{
+        background-image: url(/public/images/bg-main-desktop.png);
+        height: 100vh;
+        width: 500px;
+    }
+    
+    .tarjeta-trasera{
+        position: absolute;
+        left: 150px;
+        top: 350px;
+    }
+
+    .numero-secreto-trasero{
+        margin: 0;
+        position: absolute;
+        top: 71px;
+        left: 220px;
+        color: hsl(0, 0%, 100%);
+        font-size: 15px;
+        letter-spacing: 1px;
+    }
+    
+    .tarjeta{
+        width: 300px;
+    }
+    
+    .tarjeta-delantera{
+        position: absolute;
+        top: -180px;
+        left: -60px;
+    }
+
+    .logo-tarjeta{
+        width: 60px;
+        position: absolute;
+        left: 20px;
+        top: 20px;
+    }
+
+    .numero-tarjeta{
+        width: 250px;
+        margin: 0;
+        text-align: center;
+        position: absolute;
+        bottom: 50px;
+        color: hsl(0, 0%, 100%);
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+    .tarjeta-nombre-persona{
+        width: 100px;
+        margin: 0;
+        position: absolute;
+        bottom: 25px;
+        left: 37px;
+        color: hsl(0, 0%, 100%);
+        font-size: 10px;
+        text-transform: uppercase;
+    }
+    
+    .fecha-caducidad{
+        margin: 0;
+        position: absolute;
+        bottom: 25px;
+        left: 230px;
+        color: hsl(0, 0%, 100%);
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 1440px){
+    .tarjeta-trasera{
+        position: absolute;
+        left: 200px;
+        top: 450px;
+    }
+
+    .numero-secreto-trasero{
+        margin: 0;
+        position: absolute;
+        top: 94px;
+        left: 300px;
+        color: hsl(0, 0%, 100%);
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+    .tarjeta{
+        width: 400px;
+    }
+
+    .tarjeta-delantera{
+        position: absolute;
+        top: -250px;
+        left: -80px;
+    }
+
+    .logo-tarjeta{
+        width: 100px;
+        position: absolute;
+        left: 20px;
+        top: 20px;
+    }
+
+    .numero-tarjeta{
+        width: 350px;
+        margin: 0;
+        position: absolute;
+        bottom: 60px;
+        left: 20px;
+        color: hsl(0, 0%, 100%);
+        font-size: 24px;
+        letter-spacing: 1px;
+    }
+
+    .tarjeta-nombre-persona{
+        width: 150px;
+        margin: 0;
+        position: absolute;
+        bottom: 25px;
+        left: 53px;
+        color: hsl(0, 0%, 100%);
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+    .fecha-caducidad{
+        margin: 0;
+        position: absolute;
+        bottom: 25px;
+        left: 310px;
+        color: hsl(0, 0%, 100%);
+        font-size: 14px;
+    }
+}

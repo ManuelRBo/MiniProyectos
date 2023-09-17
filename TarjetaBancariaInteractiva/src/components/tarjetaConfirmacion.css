@@ -1,0 +1,43 @@
+.contenedor-tarjeta-confirmacion{
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.contenedor-tarjeta-confirmacion img{
+    width: 100px;
+}
+
+.contenedor-tarjeta-confirmacion h1{
+    text-transform: uppercase;
+    color: hsl(278, 68%, 11%);
+    margin-bottom: 5px;
+}
+
+.contenedor-tarjeta-confirmacion p{
+    color: hsl(279, 6%, 55%);
+    font-size: 20px;
+    margin-bottom: 50px;
+}
+
+.contenedor-tarjeta-confirmacion button{
+    width: 100%;
+    padding: 15px;
+    color: white;
+    background-color: hsl(278, 68%, 11%);
+    border: none;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+@media (min-width: 1025px){
+    .contenedor-tarjeta-confirmacion{
+        margin: 200px auto;
+    }
+}
