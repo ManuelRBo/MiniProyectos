@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Space+Grotesk:wght@500&display=swap');
+
+body{
+    background-color: #f5f5f5;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+
+}
+
+td, table, tr, tbody {
+    border: 1px solid black;
+    text-align: center;
+}
+
+td{
+    width: 50px;
+    height: 50px;
+}
+
+table{
+    border-collapse: collapse;
+    display: none;
+}
+
+.form{
+    display: none;
+}
+
+h1{
+    font-family: 'Cherry Bomb One';
+    text-align: center;
+    font-size: 80px;
+    letter-spacing: 3PX;
+    text-transform: uppercase;
+    color: #000;
+    margin: 0;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+svg{
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+    display: block;
+    transition: transform 0.7s ease;
+    cursor: pointer;
+}
+
+.bomba-texto{
+    position: relative;
+    display: inline-block;
+    transition: transform 0.7s ease;
+}
+
+.bomba-texto .parrafo{
+    position: absolute;
+    top: 65%;
+    left: 45%;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 40px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    transition: transform 0.7s ease;
+    cursor: pointer;
+    font-family: 'Cherry Bomb One';
+}
+
+.bomba-texto .parrafo {
+    transform-origin: 250px -10px;
+  transition: transform 0.7s ease;
+}
+
+.bomba-texto:hover .hoverable {
+  transform: scale(1.3);
+}
