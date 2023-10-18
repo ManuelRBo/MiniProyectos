@@ -192,3 +192,13 @@ function mostrarTablero(tablero) {
     }
   }
 }
+
+
+const play = document.querySelector('.bomba-texto');
+const titulo = document.querySelector('.titulo');
+const formulario = document.querySelector('.contenedor-formulario');
+
+play.addEventListener('click', () => {
+    titulo.classList.add('desaparecer');
+    formulario.setAttribute('class', 'aparecer');
+});

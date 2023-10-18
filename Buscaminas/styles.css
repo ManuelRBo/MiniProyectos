@@ -12,6 +12,34 @@ body{
 
 }
 
+.contenedor-formulario{
+    display: none;
+    opacity: 0;
+}
+
+.aparecer{
+    display: block;
+    transition: all 2s ease-in-out;
+    animation: aparecer 2s forwards;
+}
+
+@keyframes aparecer{
+    to{
+        opacity: 1;
+    }
+}
+
+.desaparecer{
+    animation: desaparecer 2s forwards;
+}
+
+@keyframes desaparecer{
+    to{
+        display: none;
+        opacity: 0;
+    }
+}
+
 td, table, tr, tbody {
     border: 1px solid black;
     text-align: center;
@@ -24,10 +52,6 @@ td{
 
 table{
     border-collapse: collapse;
-    display: none;
-}
-
-.form{
     display: none;
 }
 
