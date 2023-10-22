@@ -1,8 +1,15 @@
+import {niveles} from "./niveles.js";
+import { aparecerFormulario, mantenerEleccion } from "./formulario.js";
+
 const form = document.getElementById("formulario");
 const tabla = document.getElementById("tabla");
 
+aparecerFormulario();
+mantenerEleccion();
+
 let filas = 8;
 let columnas = 8;
+
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -192,13 +199,3 @@ function mostrarTablero(tablero) {
     }
   }
 }
-
-
-const play = document.querySelector('.bomba-texto');
-const titulo = document.querySelector('.titulo');
-const formulario = document.querySelector('.contenedor-formulario');
-
-play.addEventListener('click', () => {
-    titulo.classList.add('desaparecer');
-    formulario.setAttribute('class', 'aparecer');
-});

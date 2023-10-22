@@ -1,35 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Buscaminas</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
     <div class="titulo">
-        <h1>Buscaminas</h1>
-        <div class="bomba-texto">
-            <p class="hoverable parrafo">Play</p>
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-bomb hoverable" width="249" height="240" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M15.349 5.349l3.301 3.301a1.2 1.2 0 0 1 0 1.698l-.972 .972a7.5 7.5 0 1 1 -5 -5l.972 -.972a1.2 1.2 0 0 1 1.698 0z"></path>
-                <path d="M17 7l1.293 -1.293a2.414 2.414 0 0 0 .707 -1.707a1 1 0 0 1 1 -1h1"></path>
-                <path d="M7 13a3 3 0 0 1 3 -3"></path>
-              </svg>
-        </div>
+      <h1>Buscaminas</h1>
+      <div class="bomba-texto">
+        <p class="hoverable parrafo">Play</p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-bomb hoverable"
+          width="249"
+          height="240"
+          viewBox="0 0 24 24"
+          stroke-width="1"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+          <path
+            d="M15.349 5.349l3.301 3.301a1.2 1.2 0 0 1 0 1.698l-.972 .972a7.5 7.5 0 1 1 -5 -5l.972 -.972a1.2 1.2 0 0 1 1.698 0z"
+          ></path>
+          <path
+            d="M17 7l1.293 -1.293a2.414 2.414 0 0 0 .707 -1.707a1 1 0 0 1 1 -1h1"
+          ></path>
+          <path d="M7 13a3 3 0 0 1 3 -3"></path>
+        </svg>
+      </div>
     </div>
 
-    <div class="contenedor-formulario">
-        <form id="formulario">
-            <input type="number" name="filas">
-            <input type="number" name="columnas">
-            <input type="submit" value="Generar">
-        </form>
+    <div class="contenedor-niveles">
+        <h3>Elige el nivel</h3>
+
+      <div class="grid-niveles">
+        <div class="niveles" data-nivel="principiante">
+            <p class="nombre-nivel">Principiante</p>
+            <p>Filas: 8</p>
+            <p>Columnas: 8</p>
+            <p>Minas: 10</p>
+        </div>
+
+        <div class="niveles" data-nivel="intermedio">
+            <p class="nombre-nivel">Intermedio</p>
+            <p>Filas: 16</p>
+            <p>Columnas: 16</p>
+            <p>Minas: 40</p>
+        </div>
+
+        <div class="niveles" data-nivel="experto">
+            <p class="nombre-nivel">Experto</p>
+            <p>Filas: 16</p>
+            <p>Columnas: 30</p>
+            <p>Minas: 99</p>
+        </div>
+        
+        <div class="niveles" data-nivel="personalizado">
+            <p class="nombre-nivel">Personalizado</p>
+        </div>
+      </div>
+      <button>Empezar a Jugar</button>
     </div>
     <table id="tabla"></table>
 
-    <script src="app.js"></script>
-</body>
+    <script type="module" src="js/app.js"></script>
+  </body>
 </html>

@@ -1,4 +1,4 @@
-{
+export const niveles = {
     "principianete":{
         "filas" : 8,
         "columnas" : 8, 
@@ -16,4 +16,4 @@
         "columnas" : 30,
         "minas": 99
     }
-}
+};
