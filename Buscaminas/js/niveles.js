@@ -1,5 +1,5 @@
 export const niveles = {
-    "principianete":{
+    "principiante":{
         "filas" : 8,
         "columnas" : 8, 
         "minas": 10
