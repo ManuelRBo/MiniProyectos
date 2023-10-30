@@ -28,25 +28,39 @@ empezarJuego.addEventListener("click", () => {
      columnas = niveles[nivelElegido].columnas;
      minas = niveles[nivelElegido].minas;
     }else{
-      
+      if(form.filas.value && form.columnas.value){
+        filas = form.filas.value;
+        columnas = form.columnas.value;
+        minas = parseInt(filas * columnas * 0.15);
+        console.log(minas)
+      }else{
+        contenedorNiveles.appendChild(error);
+        error.innerHTML = "Rellena los campos";
+        error.classList.add("errorNivel");
+      }
     }
+    desaparecerFormulario();
+    const tablero = crearTablero(filas, columnas);
+    crearMinas(tablero, minas, filas, columnas);
+    contarMinas(tablero, filas, columnas);
+  
+    setTimeout(() => {
+      mostrarTablero(filas, columnas);
+      tabla.classList.add("aparecer");
+    }, 1000);
+  
+
+  tabla.addEventListener("mousedown", (e) => {
+    document.oncontextmenu = function () {
+      return false;
+    }; //desactivar el menu contextual
+    console.log(e.button);
+    // let id = e.target.id.split(" ");
+  });
+
   }else{
     contenedorNiveles.appendChild(error);
     error.innerHTML = "Elige un nivel";
     error.classList.add("errorNivel");
   }
-  
-  const tablero = crearTablero(filas, columnas);
-  crearMinas(tablero, 10, filas, columnas);
-  contarMinas(tablero);
-  mostrarTablero(tablero);
-  console.log(tablero);
-
-  tabla.addEventListener("click", (e) => {
-    const id = e.target.id.split(" ");
-    console.log(tablero);
-    if (tablero[id[0]][id[1]] === "M") {
-      e.target.innerHTML = "M";
-    }
-  });
 });
