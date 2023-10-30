@@ -55,7 +55,9 @@ empezarJuego.addEventListener("click", () => {
       return false;
     }; //desactivar el menu contextual
     console.log(e.button);
-    // let id = e.target.id.split(" ");
+    let id = e.target.id.split(" ");
+    let contenido = tablero[id[0]][id[1]];
+    document.getElementById(`${id[0]} ${id[1]}`).innerHTML = contenido;
   });
 
   }else{
