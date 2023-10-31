@@ -194,6 +194,7 @@ export function mostrarTablero(filas, columnas) {
     tabla.style.display = "grid";
     tabla.style.gridTemplateColumns = `repeat(${columnas}, 1fr)`;
     tabla.style.gridTemplateRows = `repeat(${filas}, 1fr)`;
+    tabla.style.gap = "3px";
     tabla.classList.add("aparecer");
     tabla.style.transform = "rotateX(0deg)";
     for (let i = 0; i < filas; i++) {
@@ -207,9 +208,28 @@ export function mostrarCeldas (tablero, id){
 
   let contenido = tablero[id[0]][id[1]];
   document.getElementById(`${id[0]} ${id[1]}`).addEventListener("click", () => {
-    
-    if(contenido != "M"){
-      document.getElementById(`${id[0]} ${id[1]}`).innerHTML = contenido;
-    }
+    mostrarCeldaContigua(tablero, parseInt(id[0]), parseInt(id[1]));
   });
+}
+
+function mostrarCeldaContigua(tablero, fila, columna){
+  if(fila < 0 || fila >= tablero.length || columna < 0 || columna >= tablero[0].length){
+    return;
+  }
+  if(tablero[fila][columna] === "M"){
+    return;
+  }
+  document.getElementById(`${fila} ${columna}`).innerHTML = tablero[fila][columna];
+  document.getElementById(`${fila} ${columna}`).classList.add('celda-pulsada');
+
+  const celdaFilas = () => {
+    return mostrarCeldaContigua(tablero, fila + 1, columna);
+  }
+
+  const celdaColumnas = () => {
+    return mostrarCeldaContigua(tablero, fila, columna + 1);
+  }
+
+  celdaColumnas();
+  celdaFilas();
 }
