@@ -202,3 +202,14 @@ export function mostrarTablero(filas, columnas) {
       }
     }
   }
+
+export function mostrarCeldas (tablero, id){
+
+  let contenido = tablero[id[0]][id[1]];
+  document.getElementById(`${id[0]} ${id[1]}`).addEventListener("click", () => {
+    
+    if(contenido != "M"){
+      document.getElementById(`${id[0]} ${id[1]}`).innerHTML = contenido;
+    }
+  });
+}

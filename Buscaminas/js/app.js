@@ -1,6 +1,6 @@
 import {niveles} from "./niveles.js";
 import { aparecerFormulario, mantenerEleccion, desaparecerFormulario } from "./formulario.js";
-import { crearTablero, crearMinas, contarMinas, mostrarTablero } from "./funcionesTablero.js";
+import { crearTablero, crearMinas, contarMinas, mostrarTablero, mostrarCeldas } from "./funcionesTablero.js";
 import { pulsarPlay } from "./pulsarPlay.js";
 
 const form = document.getElementById("formulario");
@@ -54,10 +54,8 @@ empezarJuego.addEventListener("click", () => {
     document.oncontextmenu = function () {
       return false;
     }; //desactivar el menu contextual
-    console.log(e.button);
     let id = e.target.id.split(" ");
-    let contenido = tablero[id[0]][id[1]];
-    document.getElementById(`${id[0]} ${id[1]}`).innerHTML = contenido;
+    mostrarCeldas(tablero, id);
   });
 
   }else{
