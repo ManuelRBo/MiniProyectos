@@ -1,28 +1,28 @@
 const tabla = document.getElementById("tabla");
 
 export function crearTablero(filas, columnas) {
-    let tablero = [];
-    for (let i = 0; i < filas; i++) {
-      tablero[i] = [];
-      for (let j = 0; j < columnas; j++) {
-        tablero[i][j] = 0;
-      }
+  let tablero = [];
+  for (let i = 0; i < filas; i++) {
+    tablero[i] = [];
+    for (let j = 0; j < columnas; j++) {
+      tablero[i][j] = 0;
     }
-    return tablero;
   }
-  
+  return tablero;
+}
+
 export function crearMinas(tablero, minas, filas, columnas) {
-    for (let i = 0; i < minas; i++) {
-      let fila = Math.floor(Math.random() * filas);
-      let columna = Math.floor(Math.random() * columnas);
-      if (tablero[fila][columna] === "M") {
-        i--;
-      } else {
-        tablero[fila][columna] = "M";
-      }
+  for (let i = 0; i < minas; i++) {
+    let fila = Math.floor(Math.random() * filas);
+    let columna = Math.floor(Math.random() * columnas);
+    if (tablero[fila][columna] === "M") {
+      i--;
+    } else {
+      tablero[fila][columna] = "M";
     }
   }
-  
+}
+
 // export function contarMinas(tablero, filas, columnas) {
 //     for (let i = 0; i < filas; i++) {
 //       for (let j = 0; j < columnas; j++) {
@@ -171,9 +171,14 @@ export function contarMinas(tablero, filas, columnas) {
       if (tablero[i][j] === "M") {
         // Definir las direcciones relativas a la celda actual
         const direcciones = [
-          [-1, -1], [-1, 0], [-1, 1],
-          [0, -1],           [0, 1],
-          [1, -1], [1, 0], [1, 1]
+          [-1, -1],
+          [-1, 0],
+          [-1, 1],
+          [0, -1],
+          [0, 1],
+          [1, -1],
+          [1, 0],
+          [1, 1],
         ];
 
         // Contar minas en las celdas adyacentes
@@ -189,47 +194,35 @@ export function contarMinas(tablero, filas, columnas) {
     }
   }
 }
-  
+
 export function mostrarTablero(filas, columnas) {
-    tabla.style.display = "grid";
-    tabla.style.gridTemplateColumns = `repeat(${columnas}, 1fr)`;
-    tabla.style.gridTemplateRows = `repeat(${filas}, 1fr)`;
-    tabla.style.gap = "3px";
-    tabla.classList.add("aparecer");
-    tabla.style.transform = "rotateX(0deg)";
-    for (let i = 0; i < filas; i++) {
-      for (let j = 0; j < columnas; j++) {
-        tabla.innerHTML += `<div class='celdas' id='${i} ${j}'></div>`;
+  tabla.style.display = "grid";
+  tabla.style.gridTemplateColumns = `repeat(${columnas}, 1fr)`;
+  tabla.style.gridTemplateRows = `repeat(${filas}, 1fr)`;
+  tabla.style.gap = "3px";
+  tabla.classList.add("aparecer");
+  tabla.style.transform = "rotateX(0deg)";
+  for (let i = 0; i < filas; i++) {
+    for (let j = 0; j < columnas; j++) {
+      tabla.innerHTML += `<div class='celdas' id='${i} ${j}'></div>`;
+    }
+  }
+}
+
+export function mostrarCeldaContigua(tablero, f, c) {
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+      if (i === 0 && j === 0) {
+        continue;
+      }
+
+      const celdaAdyacente = document.getElementById(`${f + i} ${c + j}`);
+      
+      if(celdaAdyacente.classList.contains("celda-pulsada") === false){
+        celdaAdyacente.classList.add("celda-pulsada");
+        celdaAdyacente.innerHTML = tablero[f + i][c + j];
+          mostrarCeldaContigua(tablero, f + i, c + j);
       }
     }
   }
-
-export function mostrarCeldas (tablero, id){
-
-  let contenido = tablero[id[0]][id[1]];
-  document.getElementById(`${id[0]} ${id[1]}`).addEventListener("click", () => {
-    mostrarCeldaContigua(tablero, parseInt(id[0]), parseInt(id[1]));
-  });
-}
-
-function mostrarCeldaContigua(tablero, fila, columna){
-  if(fila < 0 || fila >= tablero.length || columna < 0 || columna >= tablero[0].length){
-    return;
-  }
-  if(tablero[fila][columna] === "M"){
-    return;
-  }
-  document.getElementById(`${fila} ${columna}`).innerHTML = tablero[fila][columna];
-  document.getElementById(`${fila} ${columna}`).classList.add('celda-pulsada');
-
-  const celdaFilas = () => {
-    return mostrarCeldaContigua(tablero, fila + 1, columna);
-  }
-
-  const celdaColumnas = () => {
-    return mostrarCeldaContigua(tablero, fila, columna + 1);
-  }
-
-  celdaColumnas();
-  celdaFilas();
 }

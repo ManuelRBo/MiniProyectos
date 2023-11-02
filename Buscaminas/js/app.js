@@ -1,6 +1,6 @@
 import {niveles} from "./niveles.js";
 import { aparecerFormulario, mantenerEleccion, desaparecerFormulario } from "./formulario.js";
-import { crearTablero, crearMinas, contarMinas, mostrarTablero, mostrarCeldas } from "./funcionesTablero.js";
+import { crearTablero, crearMinas, contarMinas, mostrarTablero, mostrarCeldaContigua } from "./funcionesTablero.js";
 import { pulsarPlay } from "./pulsarPlay.js";
 
 const form = document.getElementById("formulario");
@@ -55,7 +55,9 @@ empezarJuego.addEventListener("click", () => {
       return false;
     }; //desactivar el menu contextual
     let id = e.target.id.split(" ");
-    mostrarCeldas(tablero, id);
+    if(tablero[id[0]][id[1]] === "0"){
+      mostrarCeldaContigua(tablero, parseInt(id[0]), parseInt(id[1]));
+    }
   });
 
   }else{
