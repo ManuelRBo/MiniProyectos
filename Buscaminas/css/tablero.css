@@ -1,15 +1,13 @@
 .celdas {
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     display: grid;
     place-items: center;
     background-color: rgb(58, 58, 58);
     border-radius: 4px;
+    box-shadow: inset 0px 0px 3px 1px black;
 }
 
-.celdas:active {
-    background-color: #353535;
-}
 
 #tabla{
     display: none;
@@ -18,4 +16,6 @@
 
 .celda-pulsada {
     background-color: rgb(179, 179, 179);
+    font-size: 20px;
+    font-weight: 700;
 }

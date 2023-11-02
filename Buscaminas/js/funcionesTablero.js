@@ -210,19 +210,45 @@ export function mostrarTablero(filas, columnas) {
 }
 
 export function mostrarCeldaContigua(tablero, f, c) {
+  if (
+    f < 0 ||
+    c < 0 ||
+    f >= tablero.length ||
+    c >= tablero[0].length ||
+    document.getElementById(`${f} ${c}`).classList.contains("celda-pulsada") ||
+    tablero[f][c] === "M"
+  ) {
+    return;
+  }
+
+  
+
+     const celdaActual = document.getElementById(`${f} ${c}`);
+      celdaActual.classList.add("celda-pulsada");
+      celdaActual.innerHTML = tablero[f][c];
+
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
       if (i === 0 && j === 0) {
         continue;
       }
 
-      const celdaAdyacente = document.getElementById(`${f + i} ${c + j}`);
-      
-      if(celdaAdyacente.classList.contains("celda-pulsada") === false){
-        celdaAdyacente.classList.add("celda-pulsada");
-        celdaAdyacente.innerHTML = tablero[f + i][c + j];
-          mostrarCeldaContigua(tablero, f + i, c + j);
+      if(tablero[f][c] === 0 ) {
+        celdaActual.innerHTML="";
+      mostrarCeldaContigua(tablero, f + i, c + j);
       }
+    }
+  }
+}
+
+
+export function perder(f, c, tablero) {
+  let contenidoCelda = tablero[f][c];
+  if(contenidoCelda === "M"){
+    document.getElementsByClassName('modalPerder')[0].style.display = "block";
+    let celdas = document.getElementsByClassName('celdas');
+    for(let i = 0; i < celdas.length; i++){
+      celdas[i].removeEventListener("mousedown", (e) => {});
     }
   }
 }

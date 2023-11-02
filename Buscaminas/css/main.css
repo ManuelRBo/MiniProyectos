@@ -2,6 +2,7 @@
 @import url(bomba.css);
 @import url(formulario.css);
 @import url(tablero.css);
+@import url(modales.css);
 
 body{
     background-color: white;

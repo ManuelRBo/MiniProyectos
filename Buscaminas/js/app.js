@@ -1,6 +1,6 @@
 import {niveles} from "./niveles.js";
 import { aparecerFormulario, mantenerEleccion, desaparecerFormulario } from "./formulario.js";
-import { crearTablero, crearMinas, contarMinas, mostrarTablero, mostrarCeldaContigua } from "./funcionesTablero.js";
+import { crearTablero, crearMinas, contarMinas, mostrarTablero, mostrarCeldaContigua, perder } from "./funcionesTablero.js";
 import { pulsarPlay } from "./pulsarPlay.js";
 
 const form = document.getElementById("formulario");
@@ -51,12 +51,19 @@ empezarJuego.addEventListener("click", () => {
   
 
   tabla.addEventListener("mousedown", (e) => {
+    let id = e.target.id.split(" ");
+    let celdaPulsada = document.getElementById(`${id[0]} ${id[1]}`);
     document.oncontextmenu = function () {
       return false;
     }; //desactivar el menu contextual
-    let id = e.target.id.split(" ");
-    if(tablero[id[0]][id[1]] === "0"){
+
+    if(e.button === 2){
+      celdaPulsada.innerHTML = "🚩";
+      celdaPulsada.style.fontSize = "20px";
+
+    }else if(e.button === 0 || e.button === 1){
       mostrarCeldaContigua(tablero, parseInt(id[0]), parseInt(id[1]));
+      perder(parseInt(id[0]), parseInt(id[1]), tablero);
     }
   });
 
