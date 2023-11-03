@@ -1,75 +1,44 @@
-import {niveles} from "./niveles.js";
-import { aparecerFormulario, mantenerEleccion, desaparecerFormulario } from "./formulario.js";
-import { crearTablero, crearMinas, contarMinas, mostrarTablero, mostrarCeldaContigua, perder } from "./funcionesTablero.js";
+//Importamos las funciones que necesitamos para el juego
+import { aparecerFormulario, mantenerEleccion } from "./formulario.js";
+import { mostrarCeldaContigua, perder } from "./funcionesTablero.js";
 import { pulsarPlay } from "./pulsarPlay.js";
+import { iniciarJuego } from "./iniciarJuego.js";
 
-const form = document.getElementById("formulario");
+//Variables globales
 const tabla = document.getElementById("tabla");
 const empezarJuego = document.getElementById("empezarJuego");
-const contenedorNiveles = document.querySelector(".contenedor-niveles");
-const error = document.createElement("p");
+let tablero;
 
+//Ejecutamos las funciones para seleccionar los niveles y empezar el juego
 pulsarPlay();
 aparecerFormulario();
 mantenerEleccion();
 
-let filas;
-let columnas;
-let minas;
 
 
+
+//Evento para empezar el juego al hacer click en el boton de empezar juego
 empezarJuego.addEventListener("click", () => {
-  let nivelElegido = document.querySelector(".elegido");
-  if(nivelElegido){
-    error.remove();
-    nivelElegido = nivelElegido.getAttribute("data-nivel");
-    if(nivelElegido === "principiante" || nivelElegido === "intermedio" || nivelElegido === "experto"){
-     filas = niveles[nivelElegido].filas;
-     columnas = niveles[nivelElegido].columnas;
-     minas = niveles[nivelElegido].minas;
-    }else{
-      if(form.filas.value && form.columnas.value){
-        filas = form.filas.value;
-        columnas = form.columnas.value;
-        minas = parseInt(filas * columnas * 0.15);
-        console.log(minas)
-      }else{
-        contenedorNiveles.appendChild(error);
-        error.innerHTML = "Rellena los campos";
-        error.classList.add("errorNivel");
-      }
-    }
-    desaparecerFormulario();
-    const tablero = crearTablero(filas, columnas);
-    crearMinas(tablero, minas, filas, columnas);
-    contarMinas(tablero, filas, columnas);
-  
-    setTimeout(() => {
-      mostrarTablero(filas, columnas);
-      tabla.classList.add("aparecer");
-    }, 1000);
-  
+  tablero = iniciarJuego();
+});
 
-  tabla.addEventListener("mousedown", (e) => {
-    let id = e.target.id.split(" ");
-    let celdaPulsada = document.getElementById(`${id[0]} ${id[1]}`);
-    document.oncontextmenu = function () {
-      return false;
-    }; //desactivar el menu contextual
 
-    if(e.button === 2){
-      celdaPulsada.innerHTML = "🚩";
-      celdaPulsada.style.fontSize = "20px";
+//Evento para mostrar las celdas contiguas al hacer click en una celda
+tabla.addEventListener("mousedown", (e) => {
+  let id = e.target.id.split(" ");
+  let celdaPulsada = document.getElementById(`${id[0]} ${id[1]}`);
+  document.oncontextmenu = function () {
+    return false;
+  }; //desactivar el menu contextual
 
-    }else if(e.button === 0 || e.button === 1){
-      mostrarCeldaContigua(tablero, parseInt(id[0]), parseInt(id[1]));
-      perder(parseInt(id[0]), parseInt(id[1]), tablero);
-    }
-  });
+  //Si se hace click derecho, se añade una bandera
+  if(e.button === 2){
+    celdaPulsada.innerHTML = "🚩";
+    celdaPulsada.style.fontSize = "20px";
 
-  }else{
-    contenedorNiveles.appendChild(error);
-    error.innerHTML = "Elige un nivel";
-    error.classList.add("errorNivel");
+  //Si se hace click izquierdo o central, se muestra la celda contigua
+  }else if(e.button === 0 || e.button === 1){
+    mostrarCeldaContigua(tablero, parseInt(id[0]), parseInt(id[1]));
+    perder(parseInt(id[0]), parseInt(id[1]), tablero);
   }
 });
