@@ -36,51 +36,73 @@
     </div>
 
     <div class="contenedor-niveles">
-        <h3>Elige el nivel</h3>
+      <h3>Elige el nivel</h3>
 
       <div class="grid-niveles">
         <div class="niveles" data-nivel="principiante">
-            <p class="nombre-nivel">Principiante</p>
-            <p>Filas: 8</p>
-            <p>Columnas: 8</p>
-            <p>Minas: 10</p>
+          <p class="nombre-nivel">Principiante</p>
+          <p>Filas: 8</p>
+          <p>Columnas: 8</p>
+          <p>Minas: 10</p>
         </div>
 
         <div class="niveles" data-nivel="intermedio">
-            <p class="nombre-nivel">Intermedio</p>
-            <p>Filas: 16</p>
-            <p>Columnas: 16</p>
-            <p>Minas: 40</p>
+          <p class="nombre-nivel">Intermedio</p>
+          <p>Filas: 16</p>
+          <p>Columnas: 16</p>
+          <p>Minas: 40</p>
         </div>
 
         <div class="niveles" data-nivel="experto">
-            <p class="nombre-nivel">Experto</p>
-            <p>Filas: 16</p>
-            <p>Columnas: 30</p>
-            <p>Minas: 99</p>
+          <p class="nombre-nivel">Experto</p>
+          <p>Filas: 16</p>
+          <p>Columnas: 30</p>
+          <p>Minas: 99</p>
         </div>
-        
+
         <div class="niveles" data-nivel="personalizado">
-            <p class="nombre-nivel">Personalizado</p>
-            <form id="formulario">
-              <input type="number" name="filas" id="filas" placeholder="Filas">
-              <input type="number" name="columnas" id="columnas" placeholder="Columnas">
-            </form>
+          <p class="nombre-nivel">Personalizado</p>
+          <form id="formulario">
+            <input type="number" name="filas" id="filas" placeholder="Filas" />
+            <input
+              type="number"
+              name="columnas"
+              id="columnas"
+              placeholder="Columnas"
+            />
+          </form>
         </div>
       </div>
-      <button id="empezarJuego" >Empezar a Jugar</button>
+      <button id="empezarJuego">Empezar a Jugar</button>
     </div>
 
-
-    <div id="tabla"></div>
-
+    <div id="juego">
+      <div class="tiempo-banderas">
+        <div class="contenedor-tiempo">
+          <p id="tiempo">🕐00:00</p>
+        </div>
+        <div class="contenedor-banderas">
+          <p id="banderas"></p>
+        </div>
+      </div>
+        <div id="tabla"></div>
+    </div>
 
     <div class="modalPerder">
       <div class="modalPerder-contenido">
         <h2>Perdiste</h2>
-        <p>Tiempo: 5:00</p>
+        <p id="tiempoJugadoPerder"></p>
         <p>¿Quieres volver a jugar?</p>
-        <button id="reiniciar">Reiniciar</button>
+        <button id="reiniciarPerder">Reiniciar</button>
+      </div>
+    </div>
+
+    <div class="modalGanar">
+      <div class="modalGanar-contenido">
+        <h2>Ganaste</h2>
+        <p id="tiempoJugadoGanar"></p>
+        <p>¿Quieres volver a jugar?</p>
+        <button id="reiniciarGanar">Reiniciar</button>
       </div>
     </div>
 

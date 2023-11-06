@@ -1,4 +1,7 @@
+import { perder, tiempo, ganar, banderas } from "./juego.js";
+
 const tabla = document.getElementById("tabla");
+const juego = document.getElementById("juego");
 
 export function crearTablero(filas, columnas) {
   let tablero = [];
@@ -196,6 +199,8 @@ export function contarMinas(tablero, filas, columnas) {
 }
 
 export function mostrarTablero(filas, columnas) {
+  juego.style.display = "block";
+  juego.style.opacity = "1";
   tabla.style.display = "grid";
   tabla.style.gridTemplateColumns = `repeat(${columnas}, 1fr)`;
   tabla.style.gridTemplateRows = `repeat(${filas}, 1fr)`;
@@ -221,11 +226,22 @@ export function mostrarCeldaContigua(tablero, f, c) {
     return;
   }
 
-  
-
      const celdaActual = document.getElementById(`${f} ${c}`);
       celdaActual.classList.add("celda-pulsada");
       celdaActual.innerHTML = tablero[f][c];
+      if (celdaActual.innerHTML === "1") {
+        celdaActual.style.color = "blue";
+      }else if (celdaActual.innerHTML === "2") {
+        celdaActual.style.color = "green";
+      }else if (celdaActual.innerHTML === "3") {
+        celdaActual.style.color = "red";
+      }else if (celdaActual.innerHTML === "4") {
+        celdaActual.style.color = "purple";
+      }else if (celdaActual.innerHTML === "5") {
+        celdaActual.style.color = "maroon";
+      }else if (celdaActual.innerHTML === "6") {
+        celdaActual.style.color = "turquoise";
+      }
 
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
@@ -242,13 +258,35 @@ export function mostrarCeldaContigua(tablero, f, c) {
 }
 
 
-export function perder(f, c, tablero) {
-  let contenidoCelda = tablero[f][c];
-  if(contenidoCelda === "M"){
-    document.getElementsByClassName('modalPerder')[0].style.display = "block";
-    let celdas = document.getElementsByClassName('celdas');
-    for(let i = 0; i < celdas.length; i++){
-      celdas[i].removeEventListener("mousedown", (e) => {});
+let tiempoIniciado = false;
+
+export function pulsarCelda(event, tablero){
+  let id = event.target.id.split(" ");
+  let celdaPulsada = document.getElementById(`${id[0]} ${id[1]}`);
+
+  //Desactivar el menu contextual
+  document.oncontextmenu = function () {
+    return false;
+  }; 
+
+  //Si se hace click derecho, se añade una bandera
+  if(event.button === 2){
+    banderas(celdaPulsada);
+    
+  //Si se hace click izquierdo o central, se muestra la celda contigua
+  }else if(event.button === 0 || event.button === 1){
+    if(!tiempoIniciado){
+      tiempo();
+      tiempoIniciado = true;
     }
+    if (celdaPulsada.classList.contains("bandera")) {
+      celdaPulsada.classList.remove("bandera");
+      celdaPulsada.innerHTML = "";
+      document.getElementById("banderas").innerHTML = `🚩0/10`;
+    }
+    mostrarCeldaContigua(tablero, parseInt(id[0]), parseInt(id[1]));
+    perder(parseInt(id[0]), parseInt(id[1]), tablero);
+    ganar(tablero);
   }
+  
 }

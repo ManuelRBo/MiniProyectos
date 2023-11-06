@@ -7,6 +7,7 @@ const form = document.getElementById("formulario");
 const tabla = document.getElementById("tabla");
 const contenedorNiveles = document.querySelector(".contenedor-niveles");
 const error = document.createElement("p");
+const banderas = document.getElementById("banderas");
 
 /**
  * @description Función que comprueba los niveles elegidos por el usuario y ejecuta el juego con los datos de ese nivel
@@ -35,14 +36,22 @@ export function iniciarJuego() {
       columnas = niveles[nivelElegido].columnas;
       minas = niveles[nivelElegido].minas;
       tablero = crearTableroMinas(filas, columnas, minas);
+      banderas.innerHTML = `🚩0/${minas}`;
 
       //Si el nivel elegido es personalizado, se ejecuta el juego con los datos introducidos por el usuario
     } else {
       if (form.filas.value && form.columnas.value) {
+        if(form.filas.value <= 20 || form.columnas.value <= 30){
         filas = form.filas.value;
         columnas = form.columnas.value;
         minas = parseInt(filas * columnas * 0.15);
         tablero = crearTableroMinas(filas, columnas, minas);
+        banderas.innerHTML = `🚩0/${minas}`;
+        }else{
+          contenedorNiveles.appendChild(error);
+          error.innerHTML = "Elige filas o columnas menores";
+          error.classList.add("errorNivel");
+        }
       } else {
         contenedorNiveles.appendChild(error);
         error.innerHTML = "Rellena los campos";

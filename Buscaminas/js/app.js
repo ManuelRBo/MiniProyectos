@@ -1,6 +1,6 @@
 //Importamos las funciones que necesitamos para el juego
 import { aparecerFormulario, mantenerEleccion } from "./formulario.js";
-import { mostrarCeldaContigua, perder } from "./funcionesTablero.js";
+import { pulsarCelda } from "./funcionesTablero.js";
 import { pulsarPlay } from "./pulsarPlay.js";
 import { iniciarJuego } from "./iniciarJuego.js";
 
@@ -24,21 +24,7 @@ empezarJuego.addEventListener("click", () => {
 
 
 //Evento para mostrar las celdas contiguas al hacer click en una celda
-tabla.addEventListener("mousedown", (e) => {
-  let id = e.target.id.split(" ");
-  let celdaPulsada = document.getElementById(`${id[0]} ${id[1]}`);
-  document.oncontextmenu = function () {
-    return false;
-  }; //desactivar el menu contextual
-
-  //Si se hace click derecho, se añade una bandera
-  if(e.button === 2){
-    celdaPulsada.innerHTML = "🚩";
-    celdaPulsada.style.fontSize = "20px";
-
-  //Si se hace click izquierdo o central, se muestra la celda contigua
-  }else if(e.button === 0 || e.button === 1){
-    mostrarCeldaContigua(tablero, parseInt(id[0]), parseInt(id[1]));
-    perder(parseInt(id[0]), parseInt(id[1]), tablero);
-  }
+tabla.addEventListener("mousedown", (event) => {
+  pulsarCelda(event, tablero);
 });
+
