@@ -1,0 +1,23 @@
+@import 'src/css/menu.css';
+
+body{
+    margin: 0;
+    padding: 0;
+    font-size: 62.5%;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+h1{
+    font-size: 3rem;
+    text-align: center;
+}
+
+.contenedorCentrado{
+    height: calc(100vh - 200px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
