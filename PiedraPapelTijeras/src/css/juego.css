@@ -59,6 +59,18 @@
     }
 }
 
+.trampa{
+    background-color: #f1f1f1;
+    font-size: 1.2rem;
+    padding: 10px;
+    transition: scale .3s ease;
+    cursor: default;
+
+    & p{
+        margin: 0;
+    }
+}
+
 .resultadoJugador{
     width: 100%;
     display: flex;
