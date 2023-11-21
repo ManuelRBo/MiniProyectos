@@ -36,7 +36,7 @@ export const jugador2 = `
     </div>
 </div>`;
 
-export const resultado = (eleccionJugador1, eleccionJugador2) => {
+export function resultado(eleccionJugador1, eleccionJugador2){
   return `<div class="resultadoJugador">
             <p>Jugador 1</p>
             <p>${objetos[eleccionJugador1]};</p>
@@ -83,54 +83,32 @@ export function comprobarGanador(eleccionJugador1, eleccionJugador2) {
 </div>`;
 }
 
-export function jugar(contenedorJuego) {
-  let terminar = false;
-  let turno = 1;
+export function controlarTeclas(e, turno) {
+  let eleccionJugador;
+  if (e.key === "q" || e.key === "w" || e.key === "e") {
+        eleccionJugador = e.key;
+  } else {
+    return { eleccionJugador: false, turno};
+  }
+  return {eleccionJugador, turno};
+}
+
+export function jugar(contenedorJuego, e, turno) {
   let eleccionJugador1;
   let eleccionJugador2;
 
-  contenedorJuego.style.display = "flex";
-  contenedorJuego.innerHTML = jugador1;
-  document.body.addEventListener("keydown", (e) => {
-    if (turno === 1) {
-      if (e.key === "q" || e.key === "w" || e.key === "e") {
-        eleccionJugador1 = e.key;
-        contenedorJuego.innerHTML = "";
+    const resultados = controlarTeclas(e, turno);
+    if(resultados.eleccionJugador !== false){
+      if(turno === 1){
+        eleccionJugador1 = resultados.eleccionJugador;
         contenedorJuego.innerHTML = jugador2;
         turno = 2;
-      } else {
-        alert("Tecla no válida");
-      }
-    } else if (turno === 2) {
-      if (e.key === "q" || e.key === "w" || e.key === "e") {
-        eleccionJugador2 = e.key;
-        contenedorJuego.innerHTML = "";
-        contenedorJuego.innerHTML = resultado(
-          eleccionJugador1,
-          eleccionJugador2
-        );
+      }else if(turno === 2){
+        eleccionJugador2 = resultados.eleccionJugador;
+        contenedorJuego.innerHTML = resultado(eleccionJugador1, eleccionJugador2);
         turno = 1;
-        setTimeout(() => {
-            contenedorJuego.innerHTML += comprobarGanador(
-                eleccionJugador1,
-                eleccionJugador2
-              );
-              const volverJugar = document.querySelector(".volverJugar");
-              const terminarJuego = document.querySelector(".terminar");
-      
-              volverJugar.addEventListener("click", () => {
-                jugar(contenedorJuego);
-              });
-      
-              terminarJuego.addEventListener("click", () => {
-                contenedorJuego.innerHTML = "";
-                terminar = true;
-              });
-        }, 1000);
-        
-      } else {
-        alert("Tecla no válida");
       }
+    }else{
+      alert("Tecla no válida");
     }
-  });
 }

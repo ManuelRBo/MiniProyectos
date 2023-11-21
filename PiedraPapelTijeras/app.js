@@ -1,4 +1,5 @@
 import {jugar} from "./src/js/jugadorVSjugador.js";
+import {jugador1} from "./src/js/jugadorVSjugador.js";
 
 //Variables globlales
 const menuJugadorvsJugador = document.querySelector(".jugador-vs-jugador");
@@ -12,8 +13,13 @@ const contenedorJuego = document.querySelector(".juego");
 const historial = [];
 
 menuJugadorvsJugador.addEventListener("click", () => {
+  let turno = 1;
   contenedor.removeChild(menuNivel);
-  jugar(contenedorJuego);
+  contenedorJuego.style.display = "flex";
+  contenedorJuego.innerHTML = jugador1;
+  document.body.addEventListener("keydown", (e) => {
+    jugar(contenedorJuego, e, turno);
+  });
 });
 
 
