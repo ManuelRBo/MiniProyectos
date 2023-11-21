@@ -16,7 +16,7 @@ menuJugadorvsJugador.addEventListener("click", () => {
   //Desaparece el menu
   contenedor.removeChild(menuNivel);
   contenedorJuego.style.display = "flex";
-  // jugar();
+  jugar();
 });
 
 menuJugadorvsPc.addEventListener("click", () => {
@@ -53,14 +53,49 @@ function jugar() {
 
           document.querySelector(".terminar").addEventListener("click", () => {
             let partidasTotales = historial.jugador1.partidasGanadas + historial.jugador2.partidasGanadas + historial.empate.partidasEmpatadas;
-            let partidasGanadasJugador1 = historial.jugador1.partidasGanadas;
             let partidasGanadasJugador2 = historial.jugador2.partidasGanadas;
-            let partidasEmpatadas = historial.empate.partidasEmpatadas;
+            let partidasGanadasJugador1 = historial.jugador1.partidasGanadas;
+            let partidasPerdidasJugador1 = partidasTotales - partidasGanadasJugador1;
+            let partidasPerdidasJugador2 = partidasTotales - partidasGanadasJugador2;
             let porcentajeGanadasJugador1 = (partidasGanadasJugador1 * 100) / partidasTotales;
             let porcentajeGanadasJugador2 = (partidasGanadasJugador2 * 100) / partidasTotales;
-            let porcentajeEmpatadas = (partidasEmpatadas * 100) / partidasTotales;
-            document.querySelector(".contenedorCentrado").style.height = "calc(100vh - 50px)";
-            contenedorJuego.innerHTML = "";
+            document.querySelector(".contenedorCentrado").style.height = "auto";
+            contenedorJuego.innerHTML = `<div class="historial">
+            <h2>Historial</h2>
+            <p class="partidasTotales">Partidas Jugadas: ${partidasTotales}</p>
+                <div class="historialJugador1">
+                    <h3>Jugador 1</h3>
+                    <p>Partidas Ganadas: ${partidasGanadasJugador1}</p>
+                    <p>Partidas Perdidas: ${partidasPerdidasJugador1}</p>
+                    <p>Porcentaje de Victoria: ${porcentajeGanadasJugador1}%</p>
+                </div>
+                <div class="historialJugador2">
+                    <h3>Jugador 2</h3>
+                    <p>Partidas Ganadas: ${partidasGanadasJugador2}</p>
+                    <p>Partidas Perdidas: ${partidasPerdidasJugador2}</p>
+                    <p>Porcentaje de Victoria: ${porcentajeGanadasJugador2}%</p>
+                </div>
+
+            <div class="eleccionesPartidas">
+                <h2>Elecciones de las Partidas</h2>
+                <div class="eleccionesJugadores">
+                    <div class="nombreJugadores">
+                        <p>Jugador 1</p>
+                        <p>Jugador 2</p>
+                    </div>
+                      <div class="conjunto">
+                      <div class="conjunto-jugador1">papel</div>
+                      <div class="conjunto-vs">VS</div>
+                      <div class="conjunto-jugador2">piedra</div>
+                      </div>
+                </div>
+            </div>
+            <div class="volverMenu"><p>Volver al Menu</p></div>
+        </div>`;
+        
+            document.querySelector(".volverMenu").addEventListener("click", () => {
+              location.reload();
+            });
             });
         }, 1000);
 
