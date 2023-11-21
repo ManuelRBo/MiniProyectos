@@ -16,7 +16,7 @@ menuJugadorvsJugador.addEventListener("click", () => {
   //Desaparece el menu
   contenedor.removeChild(menuNivel);
   contenedorJuego.style.display = "flex";
-  jugar();
+  // jugar();
 });
 
 menuJugadorvsPc.addEventListener("click", () => {
@@ -59,6 +59,8 @@ function jugar() {
             let porcentajeGanadasJugador1 = (partidasGanadasJugador1 * 100) / partidasTotales;
             let porcentajeGanadasJugador2 = (partidasGanadasJugador2 * 100) / partidasTotales;
             let porcentajeEmpatadas = (partidasEmpatadas * 100) / partidasTotales;
+            document.querySelector(".contenedorCentrado").style.height = "calc(100vh - 50px)";
+            contenedorJuego.innerHTML = "";
             });
         }, 1000);
 

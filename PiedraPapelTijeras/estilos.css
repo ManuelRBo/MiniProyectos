@@ -1,5 +1,6 @@
 @import 'src/css/menu.css';
 @import 'src/css/juego.css';
+@import 'src/css/historial.css';
 
 body{
     margin: 0;
