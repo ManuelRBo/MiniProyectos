@@ -117,13 +117,13 @@ export function historialFinal(partidasTotales, partidasGanadasJugador1, partida
           <h3>Jugador 1</h3>
           <p>Partidas Ganadas: ${partidasGanadasJugador1}</p>
           <p>Partidas Perdidas: ${partidasPerdidasJugador1}</p>
-          <p>Porcentaje de Victoria: ${porcentajeGanadasJugador1}%</p>
+          <p>Porcentaje de Victoria: ${porcentajeGanadasJugador1.toFixed(2)}%</p>
       </div>
       <div class="historialJugador2">
           <h3>Jugador 2</h3>
           <p>Partidas Ganadas: ${partidasGanadasJugador2}</p>
           <p>Partidas Perdidas: ${partidasPerdidasJugador2}</p>
-          <p>Porcentaje de Victoria: ${porcentajeGanadasJugador2}%</p>
+          <p>Porcentaje de Victoria: ${porcentajeGanadasJugador2.toFixed(2)}%</p>
       </div>
 
       <div class="eleccionesPartidas">
