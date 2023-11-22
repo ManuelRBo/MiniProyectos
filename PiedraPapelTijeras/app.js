@@ -1,5 +1,5 @@
 import { comprobarGanador } from "./src/js/jugadorVSjugador.js";
-import { jugador1, jugador2, jugador1vsPC } from "./src/js/jugadorVSjugador.js";
+import { jugador1, jugador2, jugador1vsPC, historialFinal } from "./src/js/jugadorVSjugador.js";
 import { objetos } from "./src/js/objetos.js";
 import { historial } from "./src/js/historial.js";
 
@@ -24,84 +24,66 @@ menuJugadorvsPc.addEventListener("click", () => {
   contenedorJuego.style.display = "flex";
   jugarVsPc();
 });
-
 function jugarVsPc() {
   contenedorJuego.innerHTML = jugador1vsPC;
   // Empezamos el juego e inicializamos las variables
-  let eleccionJugador1 = "";
-  let eleccionJugador2 = "";
+   eleccionJugador1 = ""; 
+   eleccionJugador2 = "";
+
+  document.body.addEventListener("keydown", manejarTeclado);
+}
+
+let activarTrampa = false;
+let eleccionJugador1 = "";
+let eleccionJugador2 = "";
 
   function manejarTeclado(e) {
-    if (e.key === "q" || e.key === "w" || e.key === "e" || e.key === "r") {
-        eleccionJugador1 = e.key;
-        historial.jugador1.elecciones.push(eleccionJugador1);
-        if(eleccionJugador1 === "r"){
-          eleccionJugador2 = eleccion80();
-        }else{
-          eleccionJugador2 = eleccionAleatoria();
-        }
+    if (e.key === "r") {
+      activarTrampa = true;
+      jugarVsPc();
+    }else if (e.key === "q" || e.key === "w" || e.key === "e") {
+      eleccionJugador1 = e.key;
+      historial.jugador1.elecciones.push(eleccionJugador1);
+
+        if (activarTrampa) {
+      eleccionJugador2 = eleccion80();
+      activarTrampa = false;
+    } else {
+      eleccionJugador2 = eleccionAleatoria();
+    }
         historial.jugador2.elecciones.push(eleccionJugador2);
         contenedorJuego.innerHTML = resultado(eleccionJugador1, eleccionJugador2, objetos);
         document.body.removeEventListener("keydown", manejarTeclado);
         setTimeout(() => {
           contenedorJuego.innerHTML += comprobarGanador(eleccionJugador1, eleccionJugador2);
-          document.querySelector(".volverJugar").addEventListener("click", () => {
-            jugarVsPc();
-          });
-          document.querySelector(".terminar").addEventListener("click", () => {
-            let partidasTotales = historial.jugador1.partidasGanadas + historial.jugador2.partidasGanadas + historial.empate.partidasEmpatadas;
-            let partidasGanadasJugador2 = historial.jugador2.partidasGanadas;
-            let partidasGanadasJugador1 = historial.jugador1.partidasGanadas;
-            let partidasPerdidasJugador1 = partidasTotales - partidasGanadasJugador1;
-            let partidasPerdidasJugador2 = partidasTotales - partidasGanadasJugador2;
-            let porcentajeGanadasJugador1 = (partidasGanadasJugador1 * 100) / partidasTotales;
-            let porcentajeGanadasJugador2 = (partidasGanadasJugador2 * 100) / partidasTotales;
-            document.querySelector(".contenedorCentrado").style.height = "auto";
-            contenedorJuego.innerHTML = `<div class="historial">
-            <h2>Historial</h2>
-            <p class="partidasTotales">Partidas Jugadas: ${partidasTotales}</p>
-                <div class="historialJugador1">
-                    <h3>Jugador 1</h3>
-                    <p>Partidas Ganadas: ${partidasGanadasJugador1}</p>
-                    <p>Partidas Perdidas: ${partidasPerdidasJugador1}</p>
-                    <p>Porcentaje de Victoria: ${porcentajeGanadasJugador1}%</p>
-                </div>
-                <div class="historialJugador2">
-                    <h3>Jugador 2</h3>
-                    <p>Partidas Ganadas: ${partidasGanadasJugador2}</p>
-                    <p>Partidas Perdidas: ${partidasPerdidasJugador2}</p>
-                    <p>Porcentaje de Victoria: ${porcentajeGanadasJugador2}%</p>
-                </div>
-
-            <div class="eleccionesPartidas">
-                <h2>Elecciones de las Partidas</h2>
-                <div class="eleccionesJugadores">
-                    <div class="nombreJugadores">
-                        <p>Jugador 1</p>
-                        <p>Jugador 2</p>
-                    </div>
-                      <div class="conjunto">
-                      <div class="conjunto-jugador1">papel</div>
-                      <div class="conjunto-vs">VS</div>
-                      <div class="conjunto-jugador2">piedra</div>
-                      </div>
-                </div>
-            </div>
-            <div class="volverMenu"><p>Volver al Menu</p></div>
-        </div>`;
-        
-            document.querySelector(".volverMenu").addEventListener("click", () => {
-              location.reload();
-            });
-            });
-
+          agregarClick();
         }, 1000);
   }else{
     alert("Tecla no valida");
   }
 }
-document.body.addEventListener("keydown", manejarTeclado);
+
+function agregarClick() {
+  document.querySelector(".volverJugar").addEventListener("click", () => {
+    jugarVsPc();
+  });
+  document.querySelector(".terminar").addEventListener("click", () => {
+    let partidasTotales = historial.jugador1.partidasGanadas + historial.jugador2.partidasGanadas + historial.empate.partidasEmpatadas;
+    let partidasGanadasJugador2 = historial.jugador2.partidasGanadas;
+    let partidasGanadasJugador1 = historial.jugador1.partidasGanadas;
+    let partidasPerdidasJugador1 = partidasTotales - partidasGanadasJugador1;
+    let partidasPerdidasJugador2 = partidasTotales - partidasGanadasJugador2;
+    let porcentajeGanadasJugador1 = (partidasGanadasJugador1 * 100) / partidasTotales;
+    let porcentajeGanadasJugador2 = (partidasGanadasJugador2 * 100) / partidasTotales;
+    document.querySelector(".contenedorCentrado").style.height = "auto";
+    contenedorJuego.innerHTML = historialFinal(partidasTotales, partidasGanadasJugador1, partidasGanadasJugador2, partidasPerdidasJugador1, partidasPerdidasJugador2, porcentajeGanadasJugador1, porcentajeGanadasJugador2, objetos, historial);
+
+    document.querySelector(".volverMenu").addEventListener("click", () => {
+      location.reload();
+    });
+    });
 }
+
 
 function jugarJugadorVSjugador() {
   contenedorJuego.innerHTML = jugador1;
@@ -139,38 +121,7 @@ function jugarJugadorVSjugador() {
             let porcentajeGanadasJugador1 = (partidasGanadasJugador1 * 100) / partidasTotales;
             let porcentajeGanadasJugador2 = (partidasGanadasJugador2 * 100) / partidasTotales;
             document.querySelector(".contenedorCentrado").style.height = "auto";
-            contenedorJuego.innerHTML = `<div class="historial">
-            <h2>Historial</h2>
-            <p class="partidasTotales">Partidas Jugadas: ${partidasTotales}</p>
-                <div class="historialJugador1">
-                    <h3>Jugador 1</h3>
-                    <p>Partidas Ganadas: ${partidasGanadasJugador1}</p>
-                    <p>Partidas Perdidas: ${partidasPerdidasJugador1}</p>
-                    <p>Porcentaje de Victoria: ${porcentajeGanadasJugador1}%</p>
-                </div>
-                <div class="historialJugador2">
-                    <h3>Jugador 2</h3>
-                    <p>Partidas Ganadas: ${partidasGanadasJugador2}</p>
-                    <p>Partidas Perdidas: ${partidasPerdidasJugador2}</p>
-                    <p>Porcentaje de Victoria: ${porcentajeGanadasJugador2}%</p>
-                </div>
-
-            <div class="eleccionesPartidas">
-                <h2>Elecciones de las Partidas</h2>
-                <div class="eleccionesJugadores">
-                    <div class="nombreJugadores">
-                        <p>Jugador 1</p>
-                        <p>Jugador 2</p>
-                    </div>
-                      <div class="conjunto">
-                      <div class="conjunto-jugador1">papel</div>
-                      <div class="conjunto-vs">VS</div>
-                      <div class="conjunto-jugador2">piedra</div>
-                      </div>
-                </div>
-            </div>
-            <div class="volverMenu"><p>Volver al Menu</p></div>
-        </div>`;
+            contenedorJuego.innerHTML = historialFinal(partidasTotales, partidasGanadasJugador1, partidasGanadasJugador2, partidasPerdidasJugador1, partidasPerdidasJugador2, porcentajeGanadasJugador1, porcentajeGanadasJugador2, objetos, historial);
         
             document.querySelector(".volverMenu").addEventListener("click", () => {
               location.reload();

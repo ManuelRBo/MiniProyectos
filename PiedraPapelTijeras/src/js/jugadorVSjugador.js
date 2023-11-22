@@ -107,3 +107,51 @@ export function comprobarGanador(eleccionJugador1, eleccionJugador2) {
     </div>
 </div>`;
 }
+
+export function historialFinal(partidasTotales, partidasGanadasJugador1, partidasGanadasJugador2, partidasPerdidasJugador1, partidasPerdidasJugador2, porcentajeGanadasJugador1, porcentajeGanadasJugador2, objetos, historial){
+    let historialHTML = `
+    <div class="historial">
+      <h2>Historial</h2>
+      <p class="partidasTotales">Partidas Jugadas: ${partidasTotales}</p>
+      <div class="historialJugador1">
+          <h3>Jugador 1</h3>
+          <p>Partidas Ganadas: ${partidasGanadasJugador1}</p>
+          <p>Partidas Perdidas: ${partidasPerdidasJugador1}</p>
+          <p>Porcentaje de Victoria: ${porcentajeGanadasJugador1}%</p>
+      </div>
+      <div class="historialJugador2">
+          <h3>Jugador 2</h3>
+          <p>Partidas Ganadas: ${partidasGanadasJugador2}</p>
+          <p>Partidas Perdidas: ${partidasPerdidasJugador2}</p>
+          <p>Porcentaje de Victoria: ${porcentajeGanadasJugador2}%</p>
+      </div>
+
+      <div class="eleccionesPartidas">
+          <h2>Elecciones de las Partidas</h2>
+          <div class="eleccionesJugadores">
+              <div class="nombreJugadores">
+                  <p>Jugador 1</p>
+                  <p>Jugador 2</p>
+              </div>
+  `;
+
+  // Bucle para agregar conjuntos de elecciones de jugadores
+  for (let i = 0; i < partidasTotales; i++) {
+    historialHTML += `
+      <div class="conjunto">
+        <div class="conjunto-jugador1">${objetos[historial.jugador1.elecciones[i]]}</div>
+        <div class="conjunto-vs">VS</div>
+        <div class="conjunto-jugador2">${objetos[historial.jugador2.elecciones[i]]}</div>
+      </div>
+    `;
+  }
+
+  // Resto del HTML
+  historialHTML += `
+      </div>
+      <div class="volverMenu"><p>Volver al Menú</p></div>
+    </div>
+  `;
+
+  return historialHTML;
+}
