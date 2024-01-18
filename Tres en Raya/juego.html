@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/juego.css">
+    <title>Tres en Raya</title>
+</head>
+<body>
+    <div class="tablero-tiempo-turno">
+        <div class="tablero">
+            <div class="fila">
+                <div class="casilla" data-fila="0" data-columna="0"></div>
+                <div class="casilla" data-fila="0" data-columna="1"></div>
+                <div class="casilla" data-fila="0" data-columna="2"></div>
+            </div>
+            <div class="fila">
+                <div class="casilla" data-fila="1" data-columna="0"></div>
+                <div class="casilla" data-fila="1" data-columna="1"></div>
+                <div class="casilla" data-fila="1" data-columna="2"></div>
+            </div>
+            <div class="fila">
+                <div class="casilla" data-fila="2" data-columna="0"></div>
+                <div class="casilla" data-fila="2" data-columna="1"></div>
+                <div class="casilla" data-fila="2" data-columna="2"></div>
+            </div>
+        </div>
+
+        <div class="tiempo-turno">
+            <div class="tiempo">
+                <div class="titulo">Tiempo</div>
+                <div class="valor" id="tiempo">03:00</div>
+            </div>
+
+            <div class="tiempo-jugador">
+                <div class="titulo">Tiempo <span>Jugador 1</span></div>
+                <div class="valor" id="tiempo-jugador">00:30</div>
+            </div>
+
+            <div class="turno">
+                <div class="titulo">Turno</div>
+                <div class="valor" id="turno">Jugador 1</div>
+            </div>
+
+            <button class="empezar" id="empezar-juego">Empezar</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/juego.js"></script>
+</body>
+</html>
