@@ -9,12 +9,22 @@ export function extraerFichas() {
   return urlSplit[1].split("=")[1];
 }
 
-export function juegoAleatorio(tablero){
-    let fila = Math.floor(Math.random() * 3);
-    let columna = Math.floor(Math.random() * 3);
-    if(tablero[fila][columna] === ""){
-        return [fila, columna];
+export function eleccionAleatoria(tablero){
+    let celda = Math.floor(Math.random() * 8);
+    if(tablero[celda] === null){
+        return celda;
     } else {
-        return juegoAleatorio(tablero);
+        return eleccionAleatoria(tablero);
     }
+}
+
+export function comprobarGanador(tablero, opcionesGanadoras) {
+  let ganador = null;
+  opcionesGanadoras.forEach((opcion) => {
+    let [a, b, c] = opcion;
+    if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
+      ganador = tablero[a];
+    }
+  });
+  return ganador;
 }
