@@ -1,9 +1,4 @@
-import {
-  extraerModo,
-  extraerFichas,
-  comprobarGanador,
-  eleccionAleatoria,
-} from "./funcionesUtiles.js";
+import { extraerModo, extraerFichas, comprobarGanador, eleccionAleatoria } from "./funcionesUtiles.js";
 import { juegoAleatorio } from "./modosJuego.js";
 
 const tiempoTurno = document.getElementById("tiempo-jugador");
@@ -25,53 +20,32 @@ let opcionesGanadoras = [
 
 empezarJuego.addEventListener("click", () => {
   let jugador = "❌";
-  if (modo === "1") {
-    if (fichas === "9") {
-      casillas.forEach((casilla) => {
-        casilla.addEventListener("click", () => {
-          if (realizarJugada(casilla, jugador)) {
-            setTimeout(() => {
-            comprobarGanadorDespuesDeJugada();
-            }, 500);
-            realizarJugadaAleatoria(jugador);
-          }
-        });
+  let ganador = null;
+  if (modo === "1" && fichas === "9") {
+    casillas.forEach((casilla) => {
+      casilla.addEventListener("click", () => {
+        if (casilla.textContent === "") {
+          casilla.textContent = jugador;
+          let celda = casilla.getAttribute("data-celda");
+          tablero[celda] = jugador;
+          setTimeout(() => {
+              ganador = comprobarGanador(tablero, opcionesGanadoras);
+              if (ganador) {
+                  alert("Ganador: " + ganador);
+              } else {
+                  jugador = "⭕";
+                  let jugada = eleccionAleatoria(tablero);
+                  tablero[jugada] = jugador;
+                  casillas.forEach((casilla) => {
+                      if (casilla.getAttribute("data-celda") == jugada) {
+                          casilla.textContent = jugador;
+                          jugador = "❌";
+                      }
+                  });
+              }
+          }, 500)
+      }
       });
-    }
+    });
   }
 });
-
-function realizarJugada(casilla, jugador) {
-  if (casilla.textContent === "") {
-    casilla.textContent = jugador;
-    let celda = casilla.getAttribute("data-celda");
-    tablero[celda] = jugador;
-    return true;
-  }
-  return false;
-}
-
-function realizarJugadaAleatoria(jugador) {
-  console.log("Realizando jugada aleatoria");
-  setTimeout(() => {
-    jugador = "⭕";
-    let jugadaPC = eleccionAleatoria(tablero);
-    tablero[jugadaPC] = jugador;
-    casillas.forEach((casilla) => {
-      if (casilla.getAttribute("data-celda") == jugadaPC) {
-        casilla.textContent = jugador;
-        jugador = "❌";
-      }
-    });
-    setTimeout(() => {
-      comprobarGanadorDespuesDeJugada();
-    }, 500);
-  }, 500);
-}
-
-function comprobarGanadorDespuesDeJugada() {
-  let ganador = comprobarGanador(tablero, opcionesGanadoras);
-  if (ganador) {
-    alert("Ganador: " + ganador);
-  }
-}
