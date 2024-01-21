@@ -24,10 +24,7 @@ empezarJuego.addEventListener("click", () => {
   if (modo === "1" && fichas === "9") {
     casillas.forEach((casilla) => {
       casilla.addEventListener("click", () => {
-        if (casilla.textContent === "") {
-          casilla.textContent = jugador;
-          let celda = casilla.getAttribute("data-celda");
-          tablero[celda] = jugador;
+          jugadaJugador(casilla, tablero, jugador);
           setTimeout(() => {
               ganador = comprobarGanador(tablero, opcionesGanadoras);
               if (ganador) {
@@ -43,9 +40,17 @@ empezarJuego.addEventListener("click", () => {
                       }
                   });
               }
-          }, 500)
-      }
+          }, 500);
       });
     });
   }
 });
+
+function jugadaJugador(casilla, tablero, jugador){
+  if(casilla.textContent === ""){
+    casilla.textContent = jugador;
+    let celda = casilla.getAttribute("data-celda");
+    tablero[celda] = jugador;
+    jugador = "⭕";
+  }
+}
