@@ -35,32 +35,34 @@ empezarJuego.addEventListener("click", () => {
     // Busca dentro de casillas la casilla que pulsa el jugador
     casillas.find((casilla) =>
       casilla.addEventListener("click", () => {
-        if (ganador === null) {
-          // Si no hay ganador, se ejecuta la jugada del jugador
-          jugadaJugador(casilla, tablero, jugador);
-          // Comprobar si hay ganador después de la jugada del jugador
-          ganador = comprobarGanador(tablero, opcionesGanadoras);
-          setTimeout(() => {
-            // Si hay ganador, se muestra el mensaje
-            if (ganador) {
-              alert("Ganador: " + ganador);
-              clearInterval(idIntervalo);
-            } else {
-              // Si no hay ganador, se ejecuta la jugada de la PC
-              jugadaPCAleatoria(casillas, tablero, jugador);
-              setTimeout(() => {
-                // Comprobar si hay ganador después de la jugada de la PC
-                ganador = comprobarGanador(tablero, opcionesGanadoras);
-                if (ganador) {
-                  alert("Ganador: " + ganador);
-                  clearInterval(idIntervalo);
-                }
-              }, 500);
-            }
-          }, 500);
-        } else {
-          clearInterval(idIntervalo);
-          removeEventListener("click", () => {});
+        if(casilla.textContent === "") {
+          if (ganador === null) {
+            // Si no hay ganador, se ejecuta la jugada del jugador
+            jugadaJugador(casilla, tablero, jugador);
+            // Comprobar si hay ganador después de la jugada del jugador
+            ganador = comprobarGanador(tablero, opcionesGanadoras);
+            setTimeout(() => {
+              // Si hay ganador, se muestra el mensaje
+              if (ganador) {
+                alert("Ganador: " + ganador);
+                clearInterval(idIntervalo);
+              } else {
+                // Si no hay ganador, se ejecuta la jugada de la PC
+                jugadaPCAleatoria(casillas, tablero, jugador);
+                setTimeout(() => {
+                  // Comprobar si hay ganador después de la jugada de la PC
+                  ganador = comprobarGanador(tablero, opcionesGanadoras);
+                  if (ganador) {
+                    alert("Ganador: " + ganador);
+                    clearInterval(idIntervalo);
+                  }
+                }, 500);
+              }
+            }, 500);
+          } else {
+            clearInterval(idIntervalo);
+            removeEventListener("click", () => {});
+          }
         }
       })
     );
@@ -69,12 +71,10 @@ empezarJuego.addEventListener("click", () => {
 
 // Funcion para la jugada del jugador
 function jugadaJugador(casilla, tablero, jugador) {
-  if (casilla.textContent === "") {
     casilla.textContent = jugador;
     contadorTiempo(5, tiempoTurno, jugador);
     let celda = casilla.getAttribute("data-celda");
     tablero[celda] = jugador;
-  }
 }
 
 // Funcion para la jugada de la PC
