@@ -10,8 +10,8 @@ export function extraerFichas() {
 }
 
 export function eleccionAleatoria(tablero){
-    let celda = Math.floor(Math.random() * 8);
-    if(tablero[celda] === null){
+    let celda = Math.floor(Math.random() * 9);
+    if(tablero[celda] === ""){
         return celda;
     } else {
         return eleccionAleatoria(tablero);
@@ -24,6 +24,9 @@ export function comprobarGanador(tablero, opcionesGanadoras) {
     let [a, b, c] = opcion;
     if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
       ganador = tablero[a];
+    }
+    if(!ganador && !tablero.includes("")){
+      ganador = "Empate";
     }
   });
   return ganador;
