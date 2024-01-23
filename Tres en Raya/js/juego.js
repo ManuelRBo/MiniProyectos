@@ -10,6 +10,8 @@ const tiempoTurno = document.getElementById("tiempo-jugador");
 const tiempoJuego = document.getElementById("tiempo");
 const empezarJuego = document.getElementById("empezar-juego");
 const casillas = Array.from(document.querySelectorAll(".casilla"));
+const turno  = document.getElementById("turno");
+turno.textContent = "❌";
 const modo = extraerModo();
 const fichas = extraerFichas();
 let tablero = Array(9).fill("");
@@ -29,16 +31,18 @@ empezarJuego.addEventListener("click", () => {
   let ganador = null;
   contadorTiempo(120, tiempoJuego);
   contadorTiempo(5, tiempoTurno, jugador);
+  turno.textContent = jugador;
 
   // Modo 1: Aleatorio
   if (modo === "1" && fichas === "9") {
-    // Busca dentro de casillas la casilla que pulsa el jugador
+    // Busca dentro de casillas la casilla que pulsa el 
     casillas.find((casilla) =>
       casilla.addEventListener("click", () => {
-        if(casilla.textContent === "") {
-          if (ganador === null) {
+        if(casilla.textContent === "" && ganador === null){
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
+            jugador = "⭕";
+            turno.textContent = jugador;
             // Comprobar si hay ganador después de la jugada del jugador
             ganador = comprobarGanador(tablero, opcionesGanadoras);
             setTimeout(() => {
@@ -49,20 +53,19 @@ empezarJuego.addEventListener("click", () => {
               } else {
                 // Si no hay ganador, se ejecuta la jugada de la PC
                 jugadaPCAleatoria(casillas, tablero, jugador);
+                jugador = "❌";
+                turno.textContent = jugador;
                 setTimeout(() => {
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
                   if (ganador) {
                     alert("Ganador: " + ganador);
                     clearInterval(idIntervalo);
+                    removeEventListener("click", () => {});
                   }
-                }, 500);
+                }, 0);
               }
-            }, 500);
-          } else {
-            clearInterval(idIntervalo);
-            removeEventListener("click", () => {});
-          }
+            }, 200);
         }
       })
     );
@@ -79,18 +82,18 @@ function jugadaJugador(casilla, tablero, jugador) {
 
 // Funcion para la jugada de la PC
 function jugadaPCAleatoria(casillas, tablero, jugador) {
-  jugador = "⭕";
   let jugada = eleccionAleatoria(tablero);
   let casillaElegida = casillas.find(
     (casilla) => casilla.getAttribute("data-celda") == jugada && casilla.textContent === "");
-  if (casillaElegida) {
-    tablero[jugada] = jugador;
-    casillaElegida.textContent = jugador;
-    contadorTiempo(5, tiempoTurno, jugador);
-    jugador = "❌";
-  } else {
-    jugadaPCAleatoria(casillas, tablero, jugador);
-  }
+  setTimeout(() => {
+    if (casillaElegida) {
+      tablero[jugada] = jugador;
+      casillaElegida.textContent = jugador;
+      contadorTiempo(5, tiempoTurno, jugador);
+    } else {
+      jugadaPCAleatoria(casillas, tablero, jugador);
+    }
+  }, 500);
 }
 
 let idIntervalo;
@@ -111,3 +114,4 @@ function contadorTiempo(t, div, jugador) {
     div.textContent = `${minutes}:${seconds}`;
   }, 1000);
 }
+
