@@ -14,7 +14,6 @@ const turno  = document.getElementById("turno");
 turno.textContent = "❌";
 const modo = extraerModo();
 const fichas = extraerFichas();
-let tablero = Array(9).fill("");
 let opcionesGanadoras = [
   [0, 1, 2], // 1
   [3, 4, 5], // 2
@@ -27,10 +26,12 @@ let opcionesGanadoras = [
 ];
 
 empezarJuego.addEventListener("click", () => {
+  let tablero = Array(9).fill("");
+  casillas.forEach((casilla) => (casilla.textContent = ""));
   let jugador = "❌";
   let ganador = null;
   contadorTiempo(120, tiempoJuego);
-  contadorTiempo(5, tiempoTurno, jugador);
+  contadorTiempo(5, tiempoTurno, jugador, ganador);
   turno.textContent = jugador;
 
   // Modo 1: Aleatorio
@@ -38,7 +39,7 @@ empezarJuego.addEventListener("click", () => {
     // Busca dentro de casillas la casilla que pulsa el 
     casillas.find((casilla) =>
       casilla.addEventListener("click", () => {
-        if(casilla.textContent === "" && ganador === null){
+        if(casilla.textContent === "" && ganador === null && jugador === "❌"){
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
             jugador = "⭕";
@@ -53,19 +54,19 @@ empezarJuego.addEventListener("click", () => {
               } else {
                 // Si no hay ganador, se ejecuta la jugada de la PC
                 jugadaPCAleatoria(casillas, tablero, jugador);
-                jugador = "❌";
-                turno.textContent = jugador;
                 setTimeout(() => {
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
+                  jugador = "❌";
+                  turno.textContent = jugador;
                   if (ganador) {
                     alert("Ganador: " + ganador);
                     clearInterval(idIntervalo);
                     removeEventListener("click", () => {});
                   }
-                }, 0);
+                }, 1);
               }
-            }, 200);
+            }, 500);
         }
       })
     );
@@ -75,9 +76,9 @@ empezarJuego.addEventListener("click", () => {
 // Funcion para la jugada del jugador
 function jugadaJugador(casilla, tablero, jugador) {
     casilla.textContent = jugador;
-    contadorTiempo(5, tiempoTurno, jugador);
     let celda = casilla.getAttribute("data-celda");
     tablero[celda] = jugador;
+    contadorTiempo(5, tiempoTurno, jugador);
 }
 
 // Funcion para la jugada de la PC
@@ -93,7 +94,7 @@ function jugadaPCAleatoria(casillas, tablero, jugador) {
     } else {
       jugadaPCAleatoria(casillas, tablero, jugador);
     }
-  }, 500);
+  }, 0);
 }
 
 let idIntervalo;
@@ -104,14 +105,17 @@ function contadorTiempo(t, div, jugador) {
     tiempo--;
     if (tiempo < 0) {
       if(jugador === "❌"){
-        return "⭕";
+        alert("Ganador: ⭕");
+        clearInterval(idIntervalo);
       }else{
-        return "❌";
+        alert("Ganador: ❌");
+        clearInterval(idIntervalo);
       }
+    }else{
+      const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
+      const seconds = (tiempo % 60).toString().padStart(2, '0');
+      div.textContent = `${minutes}:${seconds}`;
     }
-    const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
-    const seconds = (tiempo % 60).toString().padStart(2, '0');
-    div.textContent = `${minutes}:${seconds}`;
   }, 1000);
 }
 
