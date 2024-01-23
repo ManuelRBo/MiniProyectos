@@ -2,9 +2,9 @@ import {
   extraerModo,
   extraerFichas,
   comprobarGanador,
-  eleccionAleatoria,
+  contadorTiempo,
 } from "./funcionesUtiles.js";
-import { juegoAleatorio } from "./modosJuego.js";
+import { jugadaPCAleatoria } from "./1vsAleatorio.js";
 
 const tiempoTurno = document.getElementById("tiempo-jugador");
 const tiempoJuego = document.getElementById("tiempo");
@@ -31,7 +31,7 @@ empezarJuego.addEventListener("click", () => {
   let jugador = "❌";
   let ganador = null;
   contadorTiempo(120, tiempoJuego);
-  contadorTiempo(5, tiempoTurno, jugador, ganador);
+  contadorTiempo(5, tiempoTurno, jugador);
   turno.textContent = jugador;
 
   // Modo 1: Aleatorio
@@ -44,6 +44,7 @@ empezarJuego.addEventListener("click", () => {
             jugadaJugador(casilla, tablero, jugador);
             jugador = "⭕";
             turno.textContent = jugador;
+            contadorTiempo(5, tiempoTurno, jugador);
             // Comprobar si hay ganador después de la jugada del jugador
             ganador = comprobarGanador(tablero, opcionesGanadoras);
             setTimeout(() => {
@@ -53,12 +54,13 @@ empezarJuego.addEventListener("click", () => {
                 clearInterval(idIntervalo);
               } else {
                 // Si no hay ganador, se ejecuta la jugada de la PC
-                jugadaPCAleatoria(casillas, tablero, jugador);
+                jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
+                jugador = "❌";
+                turno.textContent = jugador;
+                contadorTiempo(5, tiempoTurno, jugador);
                 setTimeout(() => {
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
-                  jugador = "❌";
-                  turno.textContent = jugador;
                   if (ganador) {
                     alert("Ganador: " + ganador);
                     clearInterval(idIntervalo);
@@ -78,44 +80,5 @@ function jugadaJugador(casilla, tablero, jugador) {
     casilla.textContent = jugador;
     let celda = casilla.getAttribute("data-celda");
     tablero[celda] = jugador;
-    contadorTiempo(5, tiempoTurno, jugador);
-}
-
-// Funcion para la jugada de la PC
-function jugadaPCAleatoria(casillas, tablero, jugador) {
-  let jugada = eleccionAleatoria(tablero);
-  let casillaElegida = casillas.find(
-    (casilla) => casilla.getAttribute("data-celda") == jugada && casilla.textContent === "");
-  setTimeout(() => {
-    if (casillaElegida) {
-      tablero[jugada] = jugador;
-      casillaElegida.textContent = jugador;
-      contadorTiempo(5, tiempoTurno, jugador);
-    } else {
-      jugadaPCAleatoria(casillas, tablero, jugador);
-    }
-  }, 0);
-}
-
-let idIntervalo;
-function contadorTiempo(t, div, jugador) {
-  clearInterval(idIntervalo);
-  let tiempo = t;
-  idIntervalo = setInterval(() => {
-    tiempo--;
-    if (tiempo < 0) {
-      if(jugador === "❌"){
-        alert("Ganador: ⭕");
-        clearInterval(idIntervalo);
-      }else{
-        alert("Ganador: ❌");
-        clearInterval(idIntervalo);
-      }
-    }else{
-      const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
-      const seconds = (tiempo % 60).toString().padStart(2, '0');
-      div.textContent = `${minutes}:${seconds}`;
-    }
-  }, 1000);
 }
 

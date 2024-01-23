@@ -9,15 +9,6 @@ export function extraerFichas() {
   return urlSplit[1].split("=")[1];
 }
 
-export function eleccionAleatoria(tablero){
-    let celda = Math.floor(Math.random() * 9);
-    if(tablero[celda] === ""){
-        return celda;
-    } else {
-        return eleccionAleatoria(tablero);
-    }
-}
-
 export function comprobarGanador(tablero, opcionesGanadoras) {
   let ganador = null;
   opcionesGanadoras.forEach((opcion) => {
@@ -30,4 +21,26 @@ export function comprobarGanador(tablero, opcionesGanadoras) {
     }
   });
   return ganador;
+}
+
+let idIntervalo;
+export function contadorTiempo(t, div, jugador) {
+  clearInterval(idIntervalo);
+  let tiempo = t;
+  idIntervalo = setInterval(() => {
+    tiempo--;
+    if (tiempo < 0) {
+      if(jugador === "❌"){
+        alert("Ganador: ⭕");
+        clearInterval(idIntervalo);
+      }else{
+        alert("Ganador: ❌");
+        clearInterval(idIntervalo);
+      }
+    }else{
+      const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
+      const seconds = (tiempo % 60).toString().padStart(2, '0');
+      div.textContent = `${minutes}:${seconds}`;
+    }
+  }, 1000);
 }
