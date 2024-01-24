@@ -2,8 +2,10 @@ import {
   extraerModo,
   extraerFichas,
   comprobarGanador,
-  contadorTiempo,
+  contadorTurno,
+  contadorJuego,
   idIntervalo,
+  idIntervalo2,
 } from "./funcionesUtiles.js";
 import { jugadaPCAleatoria } from "./1vsAleatorio.js";
 
@@ -31,8 +33,8 @@ empezarJuego.addEventListener("click", () => {
   casillas.forEach((casilla) => (casilla.textContent = ""));
   let jugador = "❌";
   let ganador = null;
-  contadorTiempo(120, tiempoJuego);
-  contadorTiempo(30, tiempoTurno, jugador);
+  contadorJuego(180, tiempoJuego, jugador);
+  contadorTurno(30, tiempoTurno, jugador);
   turno.textContent = jugador;
 
   // Modo 1: Aleatorio
@@ -49,29 +51,33 @@ empezarJuego.addEventListener("click", () => {
           jugadaJugador(casilla, tablero, jugador);
           jugador = "⭕";
           turno.textContent = jugador;
-          contadorTiempo(30, tiempoTurno, jugador);
+          contadorTurno(30, tiempoTurno, jugador);
           // Comprobar si hay ganador después de la jugada del jugador
+          setTimeout(() => {
             ganador = comprobarGanador(tablero, opcionesGanadoras);
           // Si hay ganador, se muestra el mensaje
           if (ganador) {
             alert("Ganador: " + ganador);
             clearInterval(idIntervalo);
+            clearInterval(idIntervalo2);
           } else {
             // Si no hay ganador, se ejecuta la jugada de la PC
             jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
             jugador = "❌";
             turno.textContent = jugador;
-            contadorTiempo(30, tiempoTurno, jugador);
+            contadorTurno(30, tiempoTurno, jugador);
             setTimeout(() => {
               // Comprobar si hay ganador después de la jugada de la PC
               ganador = comprobarGanador(tablero, opcionesGanadoras);
               if (ganador) {
                 alert("Ganador: " + ganador);
                 clearInterval(idIntervalo);
+                clearInterval(idIntervalo2);
                 removeEventListener("click", () => {});
               }
             }, 100);
           }
+        }, 100);
         }  
       })
     );
@@ -91,15 +97,15 @@ empezarJuego.addEventListener("click", () => {
               jugadaJugador(casilla, tablero, jugador);
               jugador = "⭕";
               turno.textContent = jugador;
-              contadorTiempo(30, tiempoTurno, jugador);
+              contadorTurno(30, tiempoTurno, jugador);
               setTimeout(() => {
                 // Comprobar si hay ganador después de la jugada del jugador
                 ganador = comprobarGanador(tablero, opcionesGanadoras);
-              }, 100);
               // Si hay ganador, se muestra el mensaje
               if (ganador) {
                 alert("Ganador: " + ganador);
                 clearInterval(idIntervalo);
+                clearInterval(idIntervalo2);
               } else {
                 if (numeroO.length < 3) {
                   // Si no hay ganador, se ejecuta la jugada de la PC
@@ -116,17 +122,19 @@ empezarJuego.addEventListener("click", () => {
                 }
                 jugador = "❌";
                 turno.textContent = jugador;
-                contadorTiempo(30, tiempoTurno, jugador);
+                contadorTurno(30, tiempoTurno, jugador);
                 setTimeout(() => {
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
                   if (ganador) {
                     alert("Ganador: " + ganador);
                     clearInterval(idIntervalo);
+                    clearInterval(idIntervalo2);
                     removeEventListener("click", () => {});
                   }
-                }, 100);
+              }, 100);
               }
+            }, 100);
             } else if (numeroX.length === 3) {
               numeroX.find((casilla) =>
                 casilla.addEventListener("click", () => {
@@ -138,9 +146,8 @@ empezarJuego.addEventListener("click", () => {
                 })
               );
             }
-          });
+          }, 100);
         },
-        100
       )
     );
   }

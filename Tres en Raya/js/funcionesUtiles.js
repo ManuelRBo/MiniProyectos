@@ -24,18 +24,41 @@ export function comprobarGanador(tablero, opcionesGanadoras) {
 }
 
 export let idIntervalo;
-export function contadorTiempo(t, div, jugador) {
+export function contadorTurno(t, div, jugador) {
   clearInterval(idIntervalo);
+  div.textContent = "00:30";
   let tiempo = t;
   idIntervalo = setInterval(() => {
     tiempo--;
     if (tiempo < 0) {
       if(jugador === "❌"){
-        alert("Ganador: ⭕");
         clearInterval(idIntervalo);
+        alert("Ganador: ⭕");
+      }else{
+        clearInterval(idIntervalo);
+        alert("Ganador: ❌");
+      }
+    }else{
+      const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
+      const seconds = (tiempo % 60).toString().padStart(2, '0');
+      div.textContent = `${minutes}:${seconds}`;
+    }
+  }, 1000);
+}
+
+export let idIntervalo2;
+export function contadorJuego(t, div, jugador) {
+  clearInterval(idIntervalo2);
+  let tiempo = t;
+  idIntervalo2 = setInterval(() => {
+    tiempo--;
+    if (tiempo < 0) {
+      if(jugador === "❌"){
+        alert("Ganador: ⭕");
+        clearInterval(idIntervalo2);
       }else{
         alert("Ganador: ❌");
-        clearInterval(idIntervalo);
+        clearInterval(idIntervalo2);
       }
     }else{
       const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
