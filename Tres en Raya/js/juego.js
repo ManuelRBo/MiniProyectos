@@ -37,7 +37,7 @@ empezarJuego.addEventListener("click", () => {
   contadorTurno(30, tiempoTurno, jugador);
   turno.textContent = jugador;
 
-  // Modo 1: Aleatorio
+  // Modo 1: Aleatorio y 9 fichas
   if (modo === "1" && fichas === "9") {
     // Busca dentro de casillas la casilla que pulsa el
     casillas.find((casilla) =>
@@ -81,9 +81,11 @@ empezarJuego.addEventListener("click", () => {
         }  
       })
     );
+    // Modo 2: Aleatorio y 6 fichas
   } else if (modo === "1" && fichas === "6") {
     casillas.find((casilla) =>
       casilla.addEventListener("click",() => {
+        //Guardamos en una variable el número de casillas que contienen una X o una O
           let numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
           let numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
           setTimeout(() => {
@@ -107,10 +109,12 @@ empezarJuego.addEventListener("click", () => {
                 clearInterval(idIntervalo);
                 clearInterval(idIntervalo2);
               } else {
+                // Si no hay ganador, comprobramos si hay menos de 3 O
                 if (numeroO.length < 3) {
                   // Si no hay ganador, se ejecuta la jugada de la PC
                   jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
                 } else {
+                  // Si hay 3 O, se elimina una O aleatoria
                   let celdaAleatoria = Math.floor(
                     Math.random() * numeroO.length
                   );
@@ -135,6 +139,7 @@ empezarJuego.addEventListener("click", () => {
               }, 100);
               }
             }, 100);
+            // Si hay 3 X, se elimina una X aleatoria
             } else if (numeroX.length === 3) {
               numeroX.find((casilla) =>
                 casilla.addEventListener("click", () => {
@@ -150,6 +155,9 @@ empezarJuego.addEventListener("click", () => {
         },
       )
     );
+    //Modo 3: IA y 9 fichas
+  }else if(modo === "2" && fichas === "9"){
+
   }
 });
 
