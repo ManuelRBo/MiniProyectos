@@ -23,7 +23,7 @@ export function comprobarGanador(tablero, opcionesGanadoras) {
   return ganador;
 }
 
-let idIntervalo;
+export let idIntervalo;
 export function contadorTiempo(t, div, jugador) {
   clearInterval(idIntervalo);
   let tiempo = t;

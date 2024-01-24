@@ -3,6 +3,7 @@ import {
   extraerFichas,
   comprobarGanador,
   contadorTiempo,
+  idIntervalo
 } from "./funcionesUtiles.js";
 import { jugadaPCAleatoria } from "./1vsAleatorio.js";
 
@@ -31,7 +32,7 @@ empezarJuego.addEventListener("click", () => {
   let jugador = "❌";
   let ganador = null;
   contadorTiempo(120, tiempoJuego);
-  contadorTiempo(5, tiempoTurno, jugador);
+  contadorTiempo(30, tiempoTurno, jugador);
   turno.textContent = jugador;
 
   // Modo 1: Aleatorio
@@ -44,7 +45,7 @@ empezarJuego.addEventListener("click", () => {
             jugadaJugador(casilla, tablero, jugador);
             jugador = "⭕";
             turno.textContent = jugador;
-            contadorTiempo(5, tiempoTurno, jugador);
+            contadorTiempo(30, tiempoTurno, jugador);
             // Comprobar si hay ganador después de la jugada del jugador
             ganador = comprobarGanador(tablero, opcionesGanadoras);
             setTimeout(() => {
@@ -57,7 +58,7 @@ empezarJuego.addEventListener("click", () => {
                 jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
                 jugador = "❌";
                 turno.textContent = jugador;
-                contadorTiempo(5, tiempoTurno, jugador);
+                contadorTiempo(30, tiempoTurno, jugador);
                 setTimeout(() => {
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
@@ -66,11 +67,68 @@ empezarJuego.addEventListener("click", () => {
                     clearInterval(idIntervalo);
                     removeEventListener("click", () => {});
                   }
-                }, 1);
+                }, 100);
               }
             }, 500);
         }
       })
+    );
+  }else if(modo === "1" && fichas === "6"){
+    casillas.find((casilla) =>
+    casilla.addEventListener("click", () => {
+      let numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
+      let numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
+      setTimeout(() => {
+      if(casilla.textContent === "" && ganador === null && jugador === "❌" && numeroX.length < 3){
+        // Si no hay ganador, se ejecuta la jugada del jugador
+        jugadaJugador(casilla, tablero, jugador);
+        jugador = "⭕";
+        turno.textContent = jugador;
+        contadorTiempo(30, tiempoTurno, jugador);
+        // Comprobar si hay ganador después de la jugada del jugador
+        ganador = comprobarGanador(tablero, opcionesGanadoras);
+        setTimeout(() => {
+          // Si hay ganador, se muestra el mensaje
+          if (ganador) {
+            alert("Ganador: " + ganador);
+            clearInterval(idIntervalo);
+          } else {
+            if(numeroO.length < 3){
+            // Si no hay ganador, se ejecuta la jugada de la PC
+            jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
+            }else{
+              let celdaAleatoria = Math.floor(Math.random() * numeroO.length);
+              numeroO[celdaAleatoria].textContent = "";
+              if(tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] === "⭕"){
+                tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] = "";
+              }
+              jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
+            }
+            jugador = "❌";
+            turno.textContent = jugador;
+            contadorTiempo(30, tiempoTurno, jugador);
+            setTimeout(() => {
+              // Comprobar si hay ganador después de la jugada de la PC
+              ganador = comprobarGanador(tablero, opcionesGanadoras);
+              if (ganador) {
+                alert("Ganador: " + ganador);
+                clearInterval(idIntervalo);
+                removeEventListener("click", () => {});
+              }
+            }, 100);
+        }
+        }, 500);
+      }else if(numeroX.length >= 3){
+        numeroX.find((casilla) => casilla.addEventListener("click", () => {
+          let celda = casilla.getAttribute("data-celda");
+          casilla.textContent = "";
+          if(tablero[celda] === "❌"){
+            tablero[celda] = "";
+          }
+        }));
+      }
+    })
+  }, 100)
     );
   }
 });
