@@ -255,10 +255,10 @@ empezarJuego.addEventListener("click", () => {
                     tablero,
                     jugador,
                     opcionesGanadoras
-                  );
+                  ).mejorFichaParaEliminar;
+                  console.log(movimiento1);
                   tablero[movimiento1] = "";
                   casillas[movimiento1].textContent = "";
-                }
                   let movimiento2 = mejorMovimiento(
                     tablero,
                     jugador,
@@ -267,6 +267,7 @@ empezarJuego.addEventListener("click", () => {
 
                   tablero[movimiento2] = jugador;
                   casillas[movimiento2].textContent = jugador;
+              }
                   jugador = "❌";
                   turno.textContent = jugador;
                   setTimeout(() => {
