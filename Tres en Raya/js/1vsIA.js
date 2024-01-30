@@ -107,70 +107,96 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras) {
   
 
   export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
-  let mejorPuntuacion = -Infinity;
-  let movimiento = null;
-  let mejorFichaParaEliminar = null;
-
-  // Si el jugador ya tiene tres fichas en el tablero, debe quitar una antes de jugar
-  for (let i = 0; i < tablero.length; i++) {
-    if (tablero[i] === jugador) {
-      // Quitar la ficha de la casilla actual
-      tablero[i] = "";
-      // Evaluar la puntuación de este movimiento
-      let puntuacion = minimax6(tablero, cambiarJugador(jugador), false, opcionesGanadoras, i);
-      // Devolver la ficha a la casilla
-      tablero[i] = jugador;
-      // Actualizar la mejor puntuación, el movimiento y la ficha a eliminar si se encuentra una puntuación mejor
-      if (puntuacion > mejorPuntuacion) {
-        mejorPuntuacion = puntuacion;
-        movimiento = i;
-        mejorFichaParaEliminar = i;
-      }
-    }
-  }
-  return { movimiento, mejorFichaParaEliminar };
-}
-
-function minimax6(tablero, jugador, esMaximizado, opcionesGanadoras, fichaParaEliminar) {
-  let ganador = evaluar(tablero, opcionesGanadoras);
-  if (ganador !== null) {
-    if (ganador === jugador) {
-      return Infinity;
-    }
-    return puntuaciones[ganador];
-  }
-
-  if (esMaximizado) {
     let mejorPuntuacion = -Infinity;
+    let movimiento = null;
+  
+    // Si el jugador ya tiene tres fichas en el tablero, debe quitar una antes de jugar
     for (let i = 0; i < tablero.length; i++) {
-      if (tablero[i] === "") {
-        tablero[i] = jugador;
-        if (fichaParaEliminar !== null) {
-          // Si hay una ficha para eliminar, eliminarla
-          tablero[fichaParaEliminar] = "";
-        }
-        let puntuacion = minimax(tablero, cambiarJugador(jugador), false, opcionesGanadoras, null);
-        // Deshacer la jugada
+      if (tablero[i] === jugador) {
+        // Quitar la ficha de la casilla actual
         tablero[i] = "";
-        if (fichaParaEliminar !== null) {
-          // Si se eliminó una ficha, restaurarla
-          tablero[fichaParaEliminar] = jugador;
+        // Evaluar la puntuación de este movimiento
+        let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
+        // Devolver la ficha a la casilla
+        tablero[i] = jugador;
+        // Actualizar la mejor puntuación, el movimiento y la ficha a eliminar si se encuentra una puntuación mejor
+        if (resultado > mejorPuntuacion) {
+          mejorPuntuacion = resultado;
+          movimiento = i;
         }
-        mejorPuntuacion = Math.max(mejorPuntuacion, puntuacion);
       }
     }
-    return mejorPuntuacion;
-  } else {
-    let mejorPuntuacion = Infinity;
-    for (let i = 0; i < tablero.length; i++) {
-      if (tablero[i] === "") {
-        tablero[i] = jugador;
-        let puntuacion = minimax(tablero, cambiarJugador(jugador), true, opcionesGanadoras, null);
-        // Deshacer la jugada
-        tablero[i] = "";
-        mejorPuntuacion = Math.min(mejorPuntuacion, puntuacion);
-      }
-    }
-    return mejorPuntuacion;
+    return movimiento ;
   }
+
+
+function contarFichas(tablero) {
+  let contador = 0;
+  for (let i = 0; i < tablero.length; i++) {
+    if (tablero[i] !== "") {
+      contador++;
+    }
+  }
+  return contador;
 }
+  
+  // Función principal del algoritmo Minimax
+  function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
+    // Evaluar si hay un ganador en el tablero actual
+    let ganador = evaluar(tablero, opcionesGanadoras);
+    
+    // Si hay un ganador, devolver la puntuación correspondiente
+    if (ganador === "❌") {
+      return GANADOR_X;
+    } else if (ganador === "⭕") {
+      return GANADOR_O;
+    }else if(ganador === null){
+      return 0;
+    }
+  
+    // Si el número de fichas en el tablero es 6 y no hay ganador, es un empate
+  if (contarFichas(tablero) === 6) {
+    return 0;
+  }
+  
+    // Lógica para el jugador maximizador (❌)
+    if (esMaximizado) {
+      let mejorPuntuacion = -Infinity;
+      // Iterar sobre cada posición posible en el tablero
+      for (let i = 0; i < tablero.length; i++) {
+        // Verificar si la casilla está vacía
+        if (tablero[i] === "") {
+          // Hacer la jugada en la casilla actual
+          tablero[i] = "";
+          // Llamar recursivamente a minimax con el jugador cambiado y marcando que ahora es el turno del oponente
+          let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
+          // Deshacer la jugada para explorar otras posibilidades
+          tablero[i] = jugador;
+          // Actualizar la mejor puntuación con la puntuación máxima obtenida
+          if (resultado > mejorPuntuacion) {
+            mejorPuntuacion = resultado;
+          }
+        }
+      }
+      console.log("mejor puntuacion maximizador: "+mejorPuntuacion)
+      // Devolver la mejor puntuación encontrada
+      return mejorPuntuacion;
+    } 
+    // Lógica para el jugador minimizador (⭕)
+    else {
+      let mejorPuntuacion = Infinity;
+      for (let i = 0; i < tablero.length; i++) {
+        if (tablero[i] === "") {
+          tablero[i] = "";
+          let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
+          tablero[i] = jugador;
+          if (resultado.puntuacion < mejorPuntuacion) {
+            mejorPuntuacion = resultado;
+          }
+        }
+      }
+      console.log("mejor puntuacion minimizador: "+mejorPuntuacion)
+      return mejorPuntuacion;
+    }
+  }
+

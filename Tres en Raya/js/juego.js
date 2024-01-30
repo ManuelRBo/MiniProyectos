@@ -8,7 +8,7 @@ import {
   idIntervalo2,
 } from "./funcionesUtiles.js";
 import { jugadaPCAleatoria } from "./1vsAleatorio.js";
-import { mejorMovimiento, mejorMovimiento6Fichas } from "./1vsIA.js";
+import { mejorMovimiento } from "./1vsIA.js";
 
 const tiempoTurno = document.getElementById("tiempo-jugador");
 const tiempoJuego = document.getElementById("tiempo");
@@ -255,19 +255,20 @@ empezarJuego.addEventListener("click", () => {
                     tablero,
                     jugador,
                     opcionesGanadoras
-                  ).mejorFichaParaEliminar;
-                  console.log(movimiento1);
-                  tablero[movimiento1] = "";
-                  casillas[movimiento1].textContent = "";
+                  );
+                  tablero[movimiento1.quitar] = "";
+                  casillas[movimiento1.quitar].textContent = "";
+                  tablero[movimiento1.poner] = jugador;
+                  casillas[movimiento1.poner].textContent = jugador;
+                }else{
                   let movimiento2 = mejorMovimiento(
                     tablero,
                     jugador,
                     opcionesGanadoras
                   );
-
                   tablero[movimiento2] = jugador;
                   casillas[movimiento2].textContent = jugador;
-              }
+                }
                   jugador = "❌";
                   turno.textContent = jugador;
                   setTimeout(() => {
@@ -317,4 +318,107 @@ function jugadaJugador(casilla, tablero, jugador) {
   casilla.textContent = jugador;
   let celda = casilla.getAttribute("data-celda");
   tablero[celda] = jugador;
+}
+
+
+export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
+  let mejorPuntuacion = -Infinity;
+  let mejorMovimiento = null;
+
+  // Generar todos los movimientos posibles
+  for (let i = 0; i < tablero.length; i++) {
+    if (tablero[i] === jugador) {
+      for (let j = 0; j < tablero.length; j++) {
+        if (tablero[j] === "") {
+          // Realizar el movimiento
+          tablero[i] = "";
+          tablero[j] = jugador;
+
+          // Evaluar la puntuación de este movimiento
+          let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
+
+          // Deshacer el movimiento
+          tablero[j] = "";
+          tablero[i] = jugador;
+
+          // Actualizar la mejor puntuacion y el movimiento si se encuentra una puntuacion mejor
+          if (resultado.puntuacion > mejorPuntuacion) {
+            mejorPuntuacion = resultado.puntuacion;
+            mejorMovimiento = { quitar: i, poner: j };
+          }
+        }
+      }
+    }
+  }
+
+  // Devolver el mejor movimiento
+  return mejorMovimiento;
+}
+
+const GANADOR_X = -10;
+const GANADOR_O = 10;
+
+function evaluar(tablero, opcionesGanadoras) {
+    for (let i = 0; i < opcionesGanadoras.length; i++) {
+      let [a, b, c] = opcionesGanadoras[i];
+      if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
+        return tablero[a];
+      }
+    }
+    return null;
+  }
+
+
+// Función principal del algoritmo Minimax
+function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
+  // Evaluar si hay un ganador en el tablero actual
+  let ganador = evaluar(tablero, opcionesGanadoras);
+  
+  // Si hay un ganador, devolver la puntuación correspondiente
+  if (ganador === "❌") {
+    return { puntuacion: GANADOR_X, movimiento: null };
+  } else if (ganador === "⭕") {
+    return { puntuacion: GANADOR_O, movimiento: null };
+  } else if (ganador === null) {
+    return { puntuacion: 0, movimiento: null };
+  }
+
+    // Lógica para el jugador maximizador (❌)
+  if (esMaximizado) {
+    let mejorPuntuacion = -Infinity;
+    let mejorMovimiento = null;
+    for (let i = 0; i < tablero.length; i++) {
+      if (tablero[i] === "") {
+        tablero[i] = jugador;
+        let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
+        tablero[i] = "";
+        if (resultado.puntuacion > mejorPuntuacion || mejorMovimiento === null) {
+          mejorPuntuacion = resultado.puntuacion;
+          mejorMovimiento = i;
+        }
+      }
+    }
+    return { puntuacion: mejorPuntuacion, movimiento: mejorMovimiento };
+  } 
+   // Lógica para el jugador minimizador (⭕)
+   else {
+    let mejorPuntuacion = Infinity;
+    let mejorMovimiento = null;
+    for (let i = 0; i < tablero.length; i++) {
+      if (tablero[i] === "") {
+        tablero[i] = jugador;
+        let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
+        tablero[i] = "";
+        if (resultado.puntuacion < mejorPuntuacion || mejorMovimiento === null) {
+          mejorPuntuacion = resultado.puntuacion;
+          mejorMovimiento = i;
+        }
+      }
+    }
+    return { puntuacion: mejorPuntuacion, movimiento: mejorMovimiento };
+  }
+}
+
+function cambiarJugador(jugador) {
+  return jugador === "❌" ? "⭕" : "❌";
 }
