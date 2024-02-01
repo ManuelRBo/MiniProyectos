@@ -84,7 +84,7 @@ empezarJuego.addEventListener("click", () => {
                 }
               }, 100);
             }
-          }, 100);
+          }, 500);
         }
       })
     );
@@ -131,15 +131,7 @@ empezarJuego.addEventListener("click", () => {
                     Math.random() * numeroO.length
                   );
                   numeroO[celdaAleatoria].textContent = "";
-                  if (
-                    tablero[
-                      numeroO[celdaAleatoria].getAttribute("data-celda")
-                    ] === "⭕"
-                  ) {
-                    tablero[
-                      numeroO[celdaAleatoria].getAttribute("data-celda")
-                    ] = "";
-                  }
+                    tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] = "";
                   jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
                 }
                 jugador = "❌";
@@ -148,6 +140,7 @@ empezarJuego.addEventListener("click", () => {
                 setTimeout(() => {
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
+                  console.log(tablero);
                   if (ganador) {
                     alert("Ganador: " + ganador);
                     clearInterval(idIntervalo);
@@ -157,14 +150,12 @@ empezarJuego.addEventListener("click", () => {
                   }
                 }, 100);
               }
-            }, 100);
+            }, 500);
             // Si hay 3 X, se elimina una X aleatoria
           } else if (numeroX.length >= 2 && casilla.textContent === "❌") {
             let celda = casilla.getAttribute("data-celda");
             casilla.textContent = "";
-            if (tablero[celda] === "❌") {
               tablero[celda] = "";
-            }
           }
         }, 100);
       })
