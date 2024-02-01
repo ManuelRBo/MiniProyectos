@@ -329,6 +329,7 @@ empezarJuego.addEventListener("click", () => {
               clearInterval(idIntervalo);
               clearInterval(idIntervalo2);
               removeEventListener("click", () => {});
+              sumarHistorial(ganador);
             } else {
               jugador = "⭕";
               turno.textContent = jugador;
