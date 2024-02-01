@@ -204,7 +204,7 @@ empezarJuego.addEventListener("click", () => {
                 }
               }, 100);
             }
-          }, 100);
+          }, 500);
         }
       })
     );
