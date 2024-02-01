@@ -10,16 +10,18 @@ body{
     padding: 0;
     font-family: 'Roboto', sans-serif;
     color: #333;
-    height: 100vh;
+    min-height: 100vh;
     display: grid;
     place-items: center;
     background-color: #181818;
+    padding: 50px 0px;
 }
 
 .tablero-tiempo-turno{
     display: flex;
     align-items: center;
     gap: 100px;
+    margin-bottom: 30px;
 }
 
 .tablero{
@@ -138,4 +140,100 @@ body{
     font-size: 1.7rem;
     color: white;
     text-align: center;
+}
+
+.botones-historial{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.botones{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    & button{
+        padding: 10px 20px;
+        border: 1px solid white;
+        border-radius: 1rem;
+        background-color: transparent;
+        color: white;
+        font-size: 1.4rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all .3s ease;
+
+        &:hover{
+            background-color: white;
+            color: black;
+        }
+    }
+}
+
+.historial{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 2px solid white;
+    border-radius: 1rem;
+    padding: 20px;
+    gap: 20px;
+
+    & h2{
+        font-size: 2rem;
+        color: white;
+        margin: 0;
+    }
+}
+
+.jugadores{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.jugador{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+
+    & h3{
+        font-size: 1.6rem;
+        color: white;
+        margin: 0;
+    }
+}
+
+.puntuacion{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.puntos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    & h4{
+        font-size: 1.4rem;
+        color: white;
+        margin: 0;
+    }
+
+    & p{
+        font-size: 1.2rem;
+        color: white;
+        margin: 0;
+    }
 }

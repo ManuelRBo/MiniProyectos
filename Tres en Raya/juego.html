@@ -1,51 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/juego.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/juego.css" />
     <title>Tres en Raya</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="tablero-tiempo-turno">
-        <div class="tablero">
-            <div class="fila">
-                <div class="casilla" data-celda="0"></div>
-                <div class="casilla" data-celda="1"></div>
-                <div class="casilla" data-celda="2"></div>
-            </div>
-            <div class="fila">
-                <div class="casilla" data-celda="3"></div>
-                <div class="casilla" data-celda="4"></div>
-                <div class="casilla" data-celda="5"></div>
-            </div>
-            <div class="fila">
-                <div class="casilla" data-celda="6"></div>
-                <div class="casilla" data-celda="7"></div>
-                <div class="casilla" data-celda="8"></div>
-            </div>
+      <div class="tablero">
+        <div class="fila">
+          <div class="casilla" data-celda="0"></div>
+          <div class="casilla" data-celda="1"></div>
+          <div class="casilla" data-celda="2"></div>
+        </div>
+        <div class="fila">
+          <div class="casilla" data-celda="3"></div>
+          <div class="casilla" data-celda="4"></div>
+          <div class="casilla" data-celda="5"></div>
+        </div>
+        <div class="fila">
+          <div class="casilla" data-celda="6"></div>
+          <div class="casilla" data-celda="7"></div>
+          <div class="casilla" data-celda="8"></div>
+        </div>
+      </div>
+
+      <div class="tiempo-turno">
+        <div class="tiempo">
+          <div class="titulo">Tiempo</div>
+          <div class="valor" id="tiempo">03:00</div>
         </div>
 
-        <div class="tiempo-turno">
-            <div class="tiempo">
-                <div class="titulo">Tiempo</div>
-                <div class="valor" id="tiempo">03:00</div>
-            </div>
-
-            <div class="tiempo-jugador">
-                <div class="titulo">Tiempo <span>Jugador 1</span></div>
-                <div class="valor" id="tiempo-jugador">00:30</div>
-            </div>
-
-            <div class="turno">
-                <div class="titulo">Turno</div>
-                <div class="valor" id="turno"></div>
-            </div>
-
-            <button class="empezar" id="empezar-juego">Empezar Partida</button>
+        <div class="tiempo-jugador">
+          <div class="titulo">Tiempo <span>Jugador 1</span></div>
+          <div class="valor" id="tiempo-jugador">00:30</div>
         </div>
+
+        <div class="turno">
+          <div class="titulo">Turno</div>
+          <div class="valor" id="turno"></div>
+        </div>
+
+        <button class="empezar" id="empezar-juego">Empezar Partida</button>
+      </div>
+    </div>
+
+    <div class="botones-historial">
+      <div class="botones">
+        <button id="volverMenu">Volver al menu</button>
+        <button id="reiniciarHistorial">Reiniciar historial</button>
+      </div>
+      <div class="historial">
+        <h2>Historial</h2>
+        <div class="jugadores">
+            <div class="jugador">
+              <h3>Jugador ❌</h3>
+              <div class="puntuacion">
+                <div class="puntos">
+                  <h4>Victorias</h4>
+                  <p id="victoriasX">0</p>
+                </div>
+                <div class="puntos">
+                  <h4>Derrotas</h4>
+                  <p id="derrotasX">0</p>
+                </div>
+              </div>
+            </div>
+            <div class="jugador">
+              <h3>Jugador ⭕</h3>
+              <div class="puntuacion">
+                <div class="puntos">
+                  <h4>Victorias</h4>
+                  <p id="victoriasO">0</p>
+                </div>
+                <div class="puntos">
+                  <h4>Derrotas</h4>
+                  <p id="derrotasO">0</p>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="js/juego.js"></script>
-</body>
+  </body>
 </html>

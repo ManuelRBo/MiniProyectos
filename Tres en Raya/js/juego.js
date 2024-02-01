@@ -10,6 +10,10 @@ import {
 import { jugadaPCAleatoria } from "./1vsAleatorio.js";
 import { mejorMovimiento, mejorMovimiento6Fichas } from "./1vsIA.js";
 
+const victoriasX = document.getElementById("victoriasX");
+const victoriasO = document.getElementById("victoriasO");
+const derrotasX = document.getElementById("derrotasX");
+const derrotasO = document.getElementById("derrotasO");
 const tiempoTurno = document.getElementById("tiempo-jugador");
 const tiempoJuego = document.getElementById("tiempo");
 const empezarJuego = document.getElementById("empezar-juego");
@@ -61,6 +65,7 @@ empezarJuego.addEventListener("click", () => {
               alert("Ganador: " + ganador);
               clearInterval(idIntervalo);
               clearInterval(idIntervalo2);
+              sumarHistorial(ganador);
             } else {
               // Si no hay ganador, se ejecuta la jugada de la PC
               jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
@@ -74,6 +79,7 @@ empezarJuego.addEventListener("click", () => {
                   alert("Ganador: " + ganador);
                   clearInterval(idIntervalo);
                   clearInterval(idIntervalo2);
+                  sumarHistorial(ganador);
                   removeEventListener("click", () => {});
                 }
               }, 100);
@@ -113,6 +119,7 @@ empezarJuego.addEventListener("click", () => {
                 alert("Ganador: " + ganador);
                 clearInterval(idIntervalo);
                 clearInterval(idIntervalo2);
+                sumarHistorial(ganador);
               } else {
                 // Si no hay ganador, comprobramos si hay menos de 3 O
                 if (numeroO.length < 3) {
@@ -146,6 +153,7 @@ empezarJuego.addEventListener("click", () => {
                     clearInterval(idIntervalo);
                     clearInterval(idIntervalo2);
                     removeEventListener("click", () => {});
+                    sumarHistorial(ganador);
                   }
                 }, 100);
               }
@@ -179,6 +187,7 @@ empezarJuego.addEventListener("click", () => {
               alert("Ganador: " + ganador);
               clearInterval(idIntervalo);
               clearInterval(idIntervalo2);
+              sumarHistorial(ganador);
             } else {
               // Si no hay ganador, se ejecuta la jugada de la PC
               contadorTurno(30, tiempoTurno, jugador);
@@ -199,6 +208,7 @@ empezarJuego.addEventListener("click", () => {
                   clearInterval(idIntervalo);
                   clearInterval(idIntervalo2);
                   removeEventListener("click", () => {});
+                  sumarHistorial(ganador);
                 }
               }, 100);
             }
@@ -243,6 +253,7 @@ empezarJuego.addEventListener("click", () => {
                 alert("Ganador: " + ganador);
                 clearInterval(idIntervalo);
                 clearInterval(idIntervalo2);
+                sumarHistorial(ganador);
               } else {
                 contadorTurno(30, tiempoTurno, jugador);
                 // Si no hay ganador, comprobramos si hay menos de 3 O
@@ -282,6 +293,7 @@ empezarJuego.addEventListener("click", () => {
                     clearInterval(idIntervalo);
                     clearInterval(idIntervalo2);
                     removeEventListener("click", () => {});
+                    sumarHistorial(ganador);
                   }
                 }, 100);
               }
@@ -317,6 +329,7 @@ empezarJuego.addEventListener("click", () => {
               clearInterval(idIntervalo);
               clearInterval(idIntervalo2);
               removeEventListener("click", () => {});
+              sumarHistorial(ganador);
             } else {
               jugador = "⭕";
               turno.textContent = jugador;
@@ -336,6 +349,7 @@ empezarJuego.addEventListener("click", () => {
                         clearInterval(idIntervalo);
                         clearInterval(idIntervalo2);
                         removeEventListener("click", () => {});
+                        sumarHistorial(ganador);
                       } else {
                         jugador = "❌";
                         turno.textContent = jugador;
@@ -373,6 +387,7 @@ empezarJuego.addEventListener("click", () => {
               clearInterval(idIntervalo);
               clearInterval(idIntervalo2);
               removeEventListener("click", () => {});
+              sumarHistorial(ganador);
             }else{
               jugador = "⭕";
               turno.textContent = "⭕";
@@ -388,6 +403,7 @@ empezarJuego.addEventListener("click", () => {
                       clearInterval(idIntervalo);
                       clearInterval(idIntervalo2);
                       removeEventListener("click", () => {});
+                      sumarHistorial(ganador);
                     }else{
                       jugador = "❌";
                       turno.textContent = jugador;
@@ -429,9 +445,42 @@ empezarJuego.addEventListener("click", () => {
   }
 });
 
+document.getElementById("reiniciarHistorial").addEventListener("click", () => {
+  reiniciarHistorial();
+});
+
+document.getElementById("volverMenu").addEventListener("click", () => {
+  window.location.href = "../menu.html";
+});
+
 // Funcion para la jugada del jugador
 function jugadaJugador(casilla, tablero, jugador) {
   casilla.textContent = jugador;
   let celda = casilla.getAttribute("data-celda");
   tablero[celda] = jugador;
+}
+
+function sumarHistorial(ganador) {
+  let victorias_X = parseInt(victoriasX.textContent);
+  let derrotas_X = parseInt(derrotasX.textContent);
+  let victorias_O = parseInt(victoriasO.textContent);
+  let derrotas_O = parseInt(derrotasO.textContent);
+  if (ganador === "❌") {
+    victorias_X++;
+    derrotas_O++;
+    victoriasX.textContent = victorias_X;
+    derrotasO.textContent = derrotas_O;
+  } else if (ganador === "⭕") {
+    victorias_O++;
+    derrotas_X++;
+    victoriasO.textContent = victorias_O;
+    derrotasX.textContent = derrotas_X;
+  }
+}
+
+function reiniciarHistorial() {
+  victoriasX.textContent = 0;
+  victoriasO.textContent = 0;
+  derrotasX.textContent = 0;
+  derrotasO.textContent = 0;
 }
