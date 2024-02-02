@@ -231,13 +231,13 @@ empezarJuego.addEventListener("click", () => {
             jugador = "⭕";
             turno.textContent = jugador;
             contadorTurno(30, tiempoTurno, jugador);
+            numeroX = casillas.filter(
+              (casilla) => casilla.textContent === "❌"
+            );
+            numeroO = casillas.filter(
+              (casilla) => casilla.textContent === "⭕"
+            );
             setTimeout(() => {
-              numeroX = casillas.filter(
-                (casilla) => casilla.textContent === "❌"
-              );
-              numeroO = casillas.filter(
-                (casilla) => casilla.textContent === "⭕"
-              );
               // Comprobar si hay ganador después de la jugada del jugador
               ganador = comprobarGanador(tablero, opcionesGanadoras);
               // Si hay ganador, se muestra el mensaje
@@ -256,6 +256,7 @@ empezarJuego.addEventListener("click", () => {
                     jugador,
                     opcionesGanadoras
                   );
+                  console.log(movimiento1);
                   tablero[movimiento1.quitar] = "";
                   casillas[movimiento1.quitar].textContent = "";
                   tablero[movimiento1.poner] = jugador;
@@ -269,15 +270,15 @@ empezarJuego.addEventListener("click", () => {
                   tablero[movimiento2] = jugador;
                   casillas[movimiento2].textContent = jugador;
                 }
+                numeroX = casillas.filter(
+                  (casilla) => casilla.textContent === "❌"
+                );
+                numeroO = casillas.filter(
+                  (casilla) => casilla.textContent === "⭕"
+                );
                 jugador = "❌";
                 turno.textContent = jugador;
                 setTimeout(() => {
-                  numeroX = casillas.filter(
-                    (casilla) => casilla.textContent === "❌"
-                  );
-                  numeroO = casillas.filter(
-                    (casilla) => casilla.textContent === "⭕"
-                  );
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
                   if (ganador) {
@@ -291,10 +292,9 @@ empezarJuego.addEventListener("click", () => {
               }
             }, 100);
             // Si hay 3 X, se elimina una X
-          } else if (numeroX.length === 3 && casilla.textContent === "❌") {
+          } else if (numeroX.length >= 3 && casilla.textContent === "❌") {
             let celda = casilla.getAttribute("data-celda");
             casilla.textContent = "";
-            if (tablero[celda] === "❌") {
               tablero[celda] = "";
               numeroX = casillas.filter(
                 (casilla) => casilla.textContent === "❌"
@@ -302,7 +302,6 @@ empezarJuego.addEventListener("click", () => {
               numeroO = casillas.filter(
                 (casilla) => casilla.textContent === "⭕"
               );
-            }
           }
         }, 100);
       })
