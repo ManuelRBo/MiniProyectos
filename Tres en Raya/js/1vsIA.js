@@ -96,22 +96,21 @@ function movimientosPosibles(tablero) {
 const GANADOR_X = -1;
 const GANADOR_O = 20;
 
-function evaluarDosFichas(tablero, opcionesGanadoras) {
+function evaluarGanador(tablero, opcionesGanadoras) {
   for (let i = 0; i < opcionesGanadoras.length; i++) {
-    let [a, b, c] = opcionesGanadoras[i];
+    let [a, b, c, d, e, f] = opcionesGanadoras[i];
     if (
-      (tablero[a] && tablero[a] === tablero[b] && !tablero[c]) ||
-      (tablero[a] && tablero[a] === tablero[c] && !tablero[b]) ||
-      (tablero[b] && tablero[b] === tablero[c] && !tablero[a])
+      tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c] &&
+      tablero[a] === tablero[d] && tablero[a] === tablero[e] && tablero[a] === tablero[f]
     ) {
-      return tablero[a] || tablero[b] || tablero[c];
+      return tablero[a];
     }
   }
   return null;
 }
   
 function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) {
-  let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
+  let ganador = evaluarGanador(tablero, opcionesGanadoras);
 
   if (ganador === "❌") {
     return GANADOR_X;
