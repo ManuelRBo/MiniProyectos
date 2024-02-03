@@ -251,6 +251,7 @@ empezarJuego.addEventListener("click", () => {
                 contadorTurno(30, tiempoTurno, jugador);
                 // Si no hay ganador, comprobramos si hay menos de 3 O
                 if (numeroO.length >= 3) {
+                  console.log(tablero);
                   // Si no hay ganador, se ejecuta la jugada de la PC
                   let movimiento1 = mejorMovimiento6Fichas(
                     tablero,
@@ -384,7 +385,7 @@ empezarJuego.addEventListener("click", () => {
               sumarHistorial(ganador);
             } else {
               jugador = "⭕";
-              turno.textContent = "⭕";
+              turno.textContent = jugador;
               contadorTurno(30, tiempoTurno, jugador);
             }
           }, 100);

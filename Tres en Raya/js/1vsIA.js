@@ -110,58 +110,45 @@ function evaluarDosFichas(tablero, opcionesGanadoras) {
   return null;
 }
   
-function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
+function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) {
   let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
 
   if (ganador === "❌") {
     return GANADOR_X;
   } else if (ganador === "⭕") {
     return GANADOR_O;
-  }else if (ganador === null && movimientosPosibles(tablero).length !== 0) {
-    return 0;
-  }
-
-  if (movimientosPosibles(tablero).length === 3) {
+  } else if (ganador === null && movimientosPosibles(tablero).length !== 0) {
     return 0;
   }
 
   let fichasJugador = tablero.reduce((count, casilla) => count + (casilla === jugador), 0);
+  let mejorPuntuacion = esMaximizado ? -Infinity : Infinity;
+  let movimientos = movimientosPosibles(tablero);
 
-  if (esMaximizado) {
-    let mejorPuntuacion = -Infinity;
-    for (let i = 0; i < tablero.length; i++) {
-      if (tablero[i] === "" || (fichasJugador === 3 && tablero[i] === jugador)) {
-        let fichaAnterior = tablero[i];
-        tablero[i] = jugador;
-        let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
-        tablero[i] = fichaAnterior;
-        if (esGanador(tablero, jugador, opcionesGanadoras)) {
-          return -Infinity;
-        } else if (esGanador(tablero, cambiarJugador(jugador), opcionesGanadoras)) {
-          return Infinity;
-        }
-        mejorPuntuacion = Math.max(mejorPuntuacion, puntuacion);
+  for (let i = 0; i < movimientos.length; i++) {
+    let fichaAnterior = tablero[movimientos[i]];
+    tablero[movimientos[i]] = jugador;
+    let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), !esMaximizado, opcionesGanadoras, alfa, beta);
+    tablero[movimientos[i]] = fichaAnterior;
+
+    if (esMaximizado) {
+      if (puntuacion > mejorPuntuacion) {
+        mejorPuntuacion = puntuacion;
       }
-    }
-    return mejorPuntuacion;
-  } else {
-    let mejorPuntuacion = Infinity;
-    for (let i = 0; i < tablero.length; i++) {
-      if (tablero[i] === "" || (fichasJugador === 3 && tablero[i] === jugador)) {
-        let fichaAnterior = tablero[i];
-        tablero[i] = jugador;
-        let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
-        tablero[i] = fichaAnterior;
-        if (esGanador(tablero, jugador, opcionesGanadoras)) {
-          return Infinity;
-        } else if (esGanador(tablero, cambiarJugador(jugador), opcionesGanadoras)) {
-          return -Infinity;
-        }
-        mejorPuntuacion = Math.min(mejorPuntuacion, puntuacion);
+      alfa = Math.max(alfa, puntuacion);
+    } else {
+      if (puntuacion < mejorPuntuacion) {
+        mejorPuntuacion = puntuacion;
       }
+      beta = Math.min(beta, puntuacion);
     }
-    return mejorPuntuacion;
+
+    if (beta <= alfa) {
+      break;
+    }
   }
+
+  return mejorPuntuacion;
 }
   
 export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
@@ -206,6 +193,19 @@ export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
   // Si la IA puede ganar en el próximo turno, realiza ese movimiento
   if (movimientoGanador) {
     return movimientoGanador;
+  }
+
+  // Si el oponente puede ganar en el próximo turno, bloquea ese movimiento
+  let movimientoBloqueo = mejoresMovimientos.find(movimiento => {
+    let [i, j] = movimiento;
+    tablero[j] = cambiarJugador(jugador);
+    let ganador = esGanador(tablero, cambiarJugador(jugador), opcionesGanadoras);
+    tablero[j] = "";
+    return ganador;
+  });
+
+  if (movimientoBloqueo) {
+    return movimientoBloqueo;
   }
 
   // Si no, elige uno de los mejores movimientos
