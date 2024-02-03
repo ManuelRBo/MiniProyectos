@@ -32,9 +32,10 @@ let opcionesGanadoras = [
   [0, 4, 8], // 7
   [2, 4, 6], // 8
 ];
+let tablero = Array(9).fill("");
 
 empezarJuego.addEventListener("click", () => {
-  let tablero = Array(9).fill("");
+  tablero.fill("");
   casillas.forEach((casilla) => (casilla.textContent = ""));
   let jugador = "❌";
   let ganador = null;
@@ -256,7 +257,6 @@ empezarJuego.addEventListener("click", () => {
                     jugador,
                     opcionesGanadoras
                   );
-                  console.log(movimiento1);
                   tablero[movimiento1.quitar] = "";
                   casillas[movimiento1.quitar].textContent = "";
                   tablero[movimiento1.poner] = jugador;

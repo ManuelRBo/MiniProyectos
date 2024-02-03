@@ -1,28 +1,4 @@
-const GANADOR_X = -1;
-const GANADOR_O = 20;
 
-function evaluar(tablero, opcionesGanadoras) {
-    for (let i = 0; i < opcionesGanadoras.length; i++) {
-      let [a, b, c] = opcionesGanadoras[i];
-      if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
-        return tablero[a];
-      }
-    }
-    return null;
-  }
-
-function cambiarJugador(jugador) {
-  return jugador === "❌" ? "⭕" : "❌";
-}
-
-function movimientosPosibles(tablero) {
-  return tablero.reduce((movimientos, casilla, index) => {
-    if (casilla === "") {
-      movimientos.push(index);
-    }
-    return movimientos;
-  }, []);
-}
 
 
 // Función principal del algoritmo Minimax
@@ -94,59 +70,136 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) 
     return movimiento;
   }
 
-  function evaluar6Fichas(tablero, opcionesGanadoras) {
+  function evaluar(tablero, opcionesGanadoras) {
     for (let i = 0; i < opcionesGanadoras.length; i++) {
       let [a, b, c] = opcionesGanadoras[i];
       if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
-        return tablero[a] === "❌" ? 1 : -1; // Devolver 1 si gana ❌, -1 si gana ⭕
+        return tablero[a];
       }
     }
-    return 0; // Ningún jugador gana en esta posición
+    return null;
   }
-  
-  function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras, fichasColocadas) {
-    let ganador = evaluar6Fichas(tablero, opcionesGanadoras);
-    if (ganador !== 0) {
-      return ganador; // Devolver la puntuación directamente
+
+function cambiarJugador(jugador) {
+  return jugador === "❌" ? "⭕" : "❌";
+}
+
+function movimientosPosibles(tablero) {
+  return tablero.reduce((movimientos, casilla, index) => {
+    if (casilla === "") {
+      movimientos.push(index);
     }
-  
-    if (fichasColocadas >= 3) {
-      return 0; // No se pueden colocar más fichas
+    return movimientos;
+  }, []);
+}
+
+const GANADOR_X = -1;
+const GANADOR_O = 20;
+
+function evaluarDosFichas(tablero, opcionesGanadoras) {
+  for (let i = 0; i < opcionesGanadoras.length; i++) {
+    let [a, b, c] = opcionesGanadoras[i];
+    if (
+      (tablero[a] && tablero[a] === tablero[b] && !tablero[c]) ||
+      (tablero[a] && tablero[a] === tablero[c] && !tablero[b]) ||
+      (tablero[b] && tablero[b] === tablero[c] && !tablero[a])
+    ) {
+      return tablero[a] || tablero[b] || tablero[c];
     }
+  }
+  return null;
+}
   
-    let mejorPuntuacion = esMaximizado ? -Infinity : Infinity;
-  
+function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
+  let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
+  console.log(tablero);
+  console.log(ganador);
+
+  if (ganador === "❌") {
+    return GANADOR_X;
+  } else if (ganador === "⭕") {
+    return GANADOR_O;
+  }else if (ganador === null) {
+    return 0;
+  }
+
+  if (movimientosPosibles(tablero).length === 3) {
+    return 0;
+  }
+
+  let fichasJugador = tablero.reduce((count, casilla) => count + (casilla === jugador), 0);
+
+  if (esMaximizado) {
+    let mejorPuntuacion = -Infinity;
     for (let i = 0; i < tablero.length; i++) {
-      if (tablero[i] === "") {
+      if (tablero[i] === "" || (fichasJugador === 3 && tablero[i] === jugador)) {
+        let fichaAnterior = tablero[i];
         tablero[i] = jugador;
-        let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), !esMaximizado, opcionesGanadoras, fichasColocadas + 1);
-        tablero[i] = "";
-        mejorPuntuacion = esMaximizado ? Math.max(mejorPuntuacion, resultado) : Math.min(mejorPuntuacion, resultado);
+        let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
+        tablero[i] = fichaAnterior;
+        mejorPuntuacion = Math.max(mejorPuntuacion, puntuacion);
       }
     }
-  
+    return mejorPuntuacion;
+  } else {
+    let mejorPuntuacion = Infinity;
+    for (let i = 0; i < tablero.length; i++) {
+      if (tablero[i] === "" || (fichasJugador === 3 && tablero[i] === jugador)) {
+        let fichaAnterior = tablero[i];
+        tablero[i] = jugador;
+        let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
+        tablero[i] = fichaAnterior;
+        mejorPuntuacion = Math.min(mejorPuntuacion, puntuacion);
+      }
+    }
     return mejorPuntuacion;
   }
+}
   
-  export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
-    let mejorPuntuacion = -Infinity;
-    let mejorMovimiento = null;
-  
+export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
+  let mejorPuntuacion = -Infinity;
+  let mejorMovimiento = null;
+
+  let fichasJugador = tablero.reduce((count, casilla) => count + (casilla === jugador), 0);
+
+  // Si la IA ya tiene 3 fichas, necesita mover una de sus fichas existentes
+  if (fichasJugador === 3) {
     for (let i = 0; i < tablero.length; i++) {
-      if (tablero[i] === "") {
-        tablero[i] = jugador;
-  
-        let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras, 1);
-  
-        tablero[i] = "";
-  
-        if (puntuacion > mejorPuntuacion) {
-          mejorPuntuacion = puntuacion;
-          mejorMovimiento = { quitar: i, poner: i };
+      if (tablero[i] === jugador) {
+        for (let j = 0; j < tablero.length; j++) {
+          if (tablero[j] === "" && i !== j) {
+            let fichaAnteriorI = tablero[i];
+            let fichaAnteriorJ = tablero[j];
+            tablero[i] = "";
+            tablero[j] = jugador;
+            let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
+            tablero[i] = fichaAnteriorI;
+            tablero[j] = fichaAnteriorJ;
+
+            if (puntuacion > mejorPuntuacion) {
+              mejorPuntuacion = puntuacion;
+              mejorMovimiento = { quitar: i, poner: j };
+            }
+          }
         }
       }
     }
-  
-    return mejorMovimiento;
+  } else { // Si la IA tiene menos de 3 fichas, puede colocar una nueva ficha
+    for (let i = 0; i < tablero.length; i++) {
+      if (tablero[i] === "") {
+        let fichaAnterior = tablero[i];
+        tablero[i] = jugador;
+        let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
+        tablero[i] = fichaAnterior;
+
+        if (puntuacion > mejorPuntuacion) {
+          mejorPuntuacion = puntuacion;
+          mejorMovimiento = { poner: i };
+        }
+      }
+    }
   }
+
+  return mejorMovimiento;
+}
   
