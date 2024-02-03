@@ -112,14 +112,12 @@ function evaluarDosFichas(tablero, opcionesGanadoras) {
   
 function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
   let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
-  console.log(tablero);
-  console.log(ganador);
 
   if (ganador === "❌") {
     return GANADOR_X;
   } else if (ganador === "⭕") {
     return GANADOR_O;
-  }else if (ganador === null) {
+  }else if (ganador === null && movimientosPosibles(tablero).length !== 0) {
     return 0;
   }
 
@@ -137,6 +135,11 @@ function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
         tablero[i] = jugador;
         let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
         tablero[i] = fichaAnterior;
+        if (esGanador(tablero, jugador, opcionesGanadoras)) {
+          return -Infinity;
+        } else if (esGanador(tablero, cambiarJugador(jugador), opcionesGanadoras)) {
+          return Infinity;
+        }
         mejorPuntuacion = Math.max(mejorPuntuacion, puntuacion);
       }
     }
@@ -149,6 +152,11 @@ function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
         tablero[i] = jugador;
         let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
         tablero[i] = fichaAnterior;
+        if (esGanador(tablero, jugador, opcionesGanadoras)) {
+          return Infinity;
+        } else if (esGanador(tablero, cambiarJugador(jugador), opcionesGanadoras)) {
+          return -Infinity;
+        }
         mejorPuntuacion = Math.min(mejorPuntuacion, puntuacion);
       }
     }
@@ -158,7 +166,8 @@ function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
   
 export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
   let mejorPuntuacion = -Infinity;
-  let mejorMovimiento = null;
+  let mejoresMovimientos = [];
+  let movimientoGanador = null;
 
   let fichasJugador = tablero.reduce((count, casilla) => count + (casilla === jugador), 0);
 
@@ -173,33 +182,46 @@ export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
             tablero[i] = "";
             tablero[j] = jugador;
             let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
+            if (esGanador(tablero, jugador, opcionesGanadoras)) {
+              movimientoGanador = [i, j];
+              break;
+            } else if (esGanador(tablero, cambiarJugador(jugador), opcionesGanadoras)) {
+              puntuacion = -Infinity;
+            }
             tablero[i] = fichaAnteriorI;
             tablero[j] = fichaAnteriorJ;
-
             if (puntuacion > mejorPuntuacion) {
               mejorPuntuacion = puntuacion;
-              mejorMovimiento = { quitar: i, poner: j };
+              mejoresMovimientos = [[i, j]];
+            } else if (puntuacion === mejorPuntuacion) {
+              mejoresMovimientos.push([i, j]);
             }
           }
         }
-      }
-    }
-  } else { // Si la IA tiene menos de 3 fichas, puede colocar una nueva ficha
-    for (let i = 0; i < tablero.length; i++) {
-      if (tablero[i] === "") {
-        let fichaAnterior = tablero[i];
-        tablero[i] = jugador;
-        let puntuacion = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
-        tablero[i] = fichaAnterior;
-
-        if (puntuacion > mejorPuntuacion) {
-          mejorPuntuacion = puntuacion;
-          mejorMovimiento = { poner: i };
-        }
+        if (movimientoGanador) break;
       }
     }
   }
 
-  return mejorMovimiento;
+  // Si la IA puede ganar en el próximo turno, realiza ese movimiento
+  if (movimientoGanador) {
+    return movimientoGanador;
+  }
+
+  // Si no, elige uno de los mejores movimientos
+  return mejoresMovimientos[Math.floor(Math.random() * mejoresMovimientos.length)];
+}
+
+function esGanador(tablero, jugador, opcionesGanadoras) {
+  // Verificar cada combinación ganadora
+  for (let i = 0; i < opcionesGanadoras.length; i++) {
+    const [a, b, c] = opcionesGanadoras[i];
+    if (tablero[a] === jugador && tablero[b] === jugador && tablero[c] === jugador) {
+      return true;
+    }
+  }
+
+  // Si no se encontró ninguna combinación ganadora, el jugador no ha ganado
+  return false;
 }
   

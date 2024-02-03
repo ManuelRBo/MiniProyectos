@@ -257,10 +257,11 @@ empezarJuego.addEventListener("click", () => {
                     jugador,
                     opcionesGanadoras
                   );
-                  tablero[movimiento1.quitar] = "";
-                  casillas[movimiento1.quitar].textContent = "";
-                  tablero[movimiento1.poner] = jugador;
-                  casillas[movimiento1.poner].textContent = jugador;
+                  console.log(movimiento1);
+                  tablero[movimiento1[0]] = "";
+                  casillas[movimiento1[0]].textContent = "";
+                  tablero[movimiento1[1]] = jugador;
+                  casillas[movimiento1[1]].textContent = jugador;
                 } else {
                   let movimiento2 = mejorMovimiento(
                     tablero,
