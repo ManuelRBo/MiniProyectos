@@ -1,5 +1,28 @@
+const GANADOR_X = -1;
+const GANADOR_O = 20;
 
+function evaluar(tablero, opcionesGanadoras) {
+  for (let i = 0; i < opcionesGanadoras.length; i++) {
+    let [a, b, c] = opcionesGanadoras[i];
+    if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
+      return tablero[a];
+    }
+  }
+  return null;
+}
 
+function cambiarJugador(jugador) {
+return jugador === "❌" ? "⭕" : "❌";
+}
+
+function movimientosPosibles(tablero) {
+return tablero.reduce((movimientos, casilla, index) => {
+  if (casilla === "") {
+    movimientos.push(index);
+  }
+  return movimientos;
+}, []);
+}
 
 // Función principal del algoritmo Minimax
 function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) {
@@ -70,31 +93,6 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) 
     return movimiento;
   }
 
-  function evaluar(tablero, opcionesGanadoras) {
-    for (let i = 0; i < opcionesGanadoras.length; i++) {
-      let [a, b, c] = opcionesGanadoras[i];
-      if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
-        return tablero[a];
-      }
-    }
-    return null;
-  }
-
-function cambiarJugador(jugador) {
-  return jugador === "❌" ? "⭕" : "❌";
-}
-
-function movimientosPosibles(tablero) {
-  return tablero.reduce((movimientos, casilla, index) => {
-    if (casilla === "") {
-      movimientos.push(index);
-    }
-    return movimientos;
-  }, []);
-}
-
-const GANADOR_X = -1;
-const GANADOR_O = 20;
 
 function evaluarGanador(tablero, opcionesGanadoras) {
   for (let i = 0; i < opcionesGanadoras.length; i++) {
