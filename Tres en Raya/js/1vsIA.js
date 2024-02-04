@@ -97,14 +97,16 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) 
 
 
   export function IA(tablero, jugador, casillas, opcionesGanadoras){
+    // Filtra las casillas ocupadas por el jugador O
     let casillas_O = casillas.filter((casilla) => casilla.textContent === "⭕").map((casilla) => casilla.getAttribute("data-celda"));
-  
+
     // Comprueba si hay un movimiento ganador disponible
     for (let i = 0; i < casillas_O.length; i++) {
       let celdaARemover = casillas_O[i];
       tablero[celdaARemover] = "";
       casillas[celdaARemover].textContent = "";
-  
+
+      // Prueba cada casilla vacía para ver si es un movimiento ganador
       for (let j = 0; j < tablero.length; j++) {
         if (tablero[j] === "") {
           tablero[j] = jugador;
@@ -115,70 +117,75 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) 
           tablero[j] = "";
         }
       }
-  
+
       tablero[celdaARemover] = jugador;
       casillas[celdaARemover].textContent = jugador;
     }
-  
+
     // Si no hay un movimiento ganador disponible, la IA sigue con su estrategia normal
     let mejorMovimiento = null;
     let mejorPuntuacion = -Infinity;
-  
+
+    // Evalúa cada casilla ocupada por el jugador O
     for (let i = 0; i < casillas_O.length; i++) {
       let celdaARemover = casillas_O[i];
       tablero[celdaARemover] = "";
-      casillas[celdaARemover].textContent = "";
-  
-      for (let j = 0; j < tablero.length; j++) {
-        if (tablero[j] === "") {
-          tablero[j] = jugador;
-          let puntuacion;
-          console.log(tablero);
-          let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
-          console.log(ganador);
-          if(ganador === "⭕"){
-            puntuacion = 1;
-          }else if(ganador === "❌"){
-            puntuacion = -1;
-          }else{
-            puntuacion = 0;
+
+      // Evalúa si hay dos fichas del jugador X en una línea ganadora
+      if(evaluarDosFichas(tablero, opcionesGanadoras) === "❌"){
+        // Prueba cada casilla vacía para ver si es un movimiento ganador o bloqueador
+        for (let j = 0; j < tablero.length; j++) {
+          if (tablero[j] === "") {
+            tablero[j] = jugador;
+            let puntuacion;
+            let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
+
+            // Asigna una puntuación en función del resultado del movimiento
+            if(ganador === "❌"){
+              puntuacion = -1;
+            }else if(ganador === "⭕"){
+              puntuacion = 1;
+            }else{
+              puntuacion = 0;
+            }
+            
+            if (puntuacion > mejorPuntuacion) {
+              mejorPuntuacion = puntuacion;
+              mejorMovimiento = [celdaARemover, j];
+            }
+            tablero[j] = "";
           }
-          if (puntuacion > mejorPuntuacion) {
-            mejorPuntuacion = puntuacion;
-            mejorMovimiento = [celdaARemover, j];
-          }
-          tablero[j] = "";
         }
       }
-  
       tablero[celdaARemover] = jugador;
-      casillas[celdaARemover].textContent = jugador;
     }
-  
+
+    // Realiza el mejor movimiento encontrado
     if (mejorMovimiento) {
       tablero[mejorMovimiento[0]] = "";
       casillas[mejorMovimiento[0]].textContent = "";
       tablero[mejorMovimiento[1]] = jugador;
       casillas[mejorMovimiento[1]].textContent = jugador;
     }
-  }
-  
-  function evaluarDosFichas(tablero, opcionesGanadoras) {
-    for (let i = 0; i < opcionesGanadoras.length; i++) {
-      let [a, b, c] = opcionesGanadoras[i];
-      if (tablero[a] && tablero[b] && !tablero[c]) {
-        if (tablero[a] === tablero[b]) {
-          return tablero[a];
-        }
-      } else if (tablero[a] && !tablero[b] && tablero[c]) {
-        if (tablero[a] === tablero[c]) {
-          return tablero[a];
-        }
-      } else if (!tablero[a] && tablero[b] && tablero[c]) {
-        if (tablero[b] === tablero[c]) {
-          return tablero[b];
-        }
+}
+
+// Evalúa si hay dos fichas del mismo jugador en una línea ganadora
+function evaluarDosFichas(tablero, opcionesGanadoras) {
+  for (let i = 0; i < opcionesGanadoras.length; i++) {
+    let [a, b, c] = opcionesGanadoras[i];
+    if (tablero[a] && tablero[b] && !tablero[c]) {
+      if (tablero[a] === tablero[b]) {
+        return tablero[a];
+      }
+    } else if (tablero[a] && !tablero[b] && tablero[c]) {
+      if (tablero[a] === tablero[c]) {
+        return tablero[a];
+      }
+    } else if (!tablero[a] && tablero[b] && tablero[c]) {
+      if (tablero[b] === tablero[c]) {
+        return tablero[b];
       }
     }
-    return null;
   }
+  return null;
+}
