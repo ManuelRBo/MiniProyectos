@@ -128,14 +128,37 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) 
 
     // Evalúa cada casilla ocupada por el jugador O
     for (let i = 0; i < casillas_O.length; i++) {
-      let celdaARemover = casillas_O[i];
+      let celdaARemover = Number(casillas_O[i]);
       tablero[celdaARemover] = "";
 
       // Evalúa si hay dos fichas del jugador X en una línea ganadora
       if(evaluarDosFichas(tablero, opcionesGanadoras) === "❌"){
         // Prueba cada casilla vacía para ver si es un movimiento ganador o bloqueador
         for (let j = 0; j < tablero.length; j++) {
-          if (tablero[j] === "") {
+          if (tablero[j] === "" && j !== celdaARemover) {
+            tablero[j] = jugador;
+            let puntuacion;
+            let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
+
+            // Asigna una puntuación en función del resultado del movimiento
+            if(ganador === "❌"){
+              puntuacion = -1;
+            }else if(ganador === "⭕"){
+              puntuacion = 1;
+            }else{
+              puntuacion = 0;
+            }
+            
+            if (puntuacion > mejorPuntuacion) {
+              mejorPuntuacion = puntuacion;
+              mejorMovimiento = [celdaARemover, j];
+            }
+            tablero[j] = "";
+          }
+        }
+      }else{
+        for (let j = 0; j < tablero.length; j++) {
+          if (tablero[j] === "" && j !== celdaARemover) {
             tablero[j] = jugador;
             let puntuacion;
             let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
@@ -171,20 +194,23 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) 
 
 // Evalúa si hay dos fichas del mismo jugador en una línea ganadora
 function evaluarDosFichas(tablero, opcionesGanadoras) {
+  // Comprueba las líneas ganadoras para el jugador "X"
   for (let i = 0; i < opcionesGanadoras.length; i++) {
     let [a, b, c] = opcionesGanadoras[i];
-    if (tablero[a] && tablero[b] && !tablero[c]) {
-      if (tablero[a] === tablero[b]) {
-        return tablero[a];
-      }
-    } else if (tablero[a] && !tablero[b] && tablero[c]) {
-      if (tablero[a] === tablero[c]) {
-        return tablero[a];
-      }
-    } else if (!tablero[a] && tablero[b] && tablero[c]) {
-      if (tablero[b] === tablero[c]) {
-        return tablero[b];
-      }
+    if ((tablero[a] === '❌' && tablero[b] === '❌' && !tablero[c]) ||
+        (tablero[a] === '❌' && !tablero[b] && tablero[c] === '❌') ||
+        (!tablero[a] && tablero[b] === '❌' && tablero[c] === '❌')) {
+      return '❌';
+    }
+  }
+
+  // Comprueba las líneas ganadoras para el jugador "O"
+  for (let i = 0; i < opcionesGanadoras.length; i++) {
+    let [a, b, c] = opcionesGanadoras[i];
+    if ((tablero[a] === '⭕' && tablero[b] === '⭕' && !tablero[c]) ||
+        (tablero[a] === '⭕' && !tablero[b] && tablero[c] === '⭕') ||
+        (!tablero[a] && tablero[b] === '⭕' && tablero[c] === '⭕')) {
+      return '⭕';
     }
   }
   return null;
