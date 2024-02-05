@@ -1,3 +1,5 @@
+import { mostrarModal } from "./modal.js";
+
 const url = window.location.href;
 const urlSplit = url.split("?")[1].split("&");
 
@@ -24,19 +26,22 @@ export function comprobarGanador(tablero, opcionesGanadoras) {
 }
 
 export let idIntervalo;
+export let terminado;
 export function contadorTurno(t, div, jugador) {
+  terminado = false;
   clearInterval(idIntervalo);
   div.textContent = "00:30";
   let tiempo = t;
   idIntervalo = setInterval(() => {
     tiempo--;
     if (tiempo < 0) {
+      terminado = true;
       if(jugador === "❌"){
         clearInterval(idIntervalo);
-        alert("Ganador: ⭕");
+        mostrarModal("⭕");
       }else{
         clearInterval(idIntervalo);
-        alert("Ganador: ❌");
+        mostrarModal("❌");
       }
     }else{
       const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
@@ -54,11 +59,13 @@ export function contadorJuego(t, div, jugador) {
     tiempo--;
     if (tiempo < 0) {
       if(jugador === "❌"){
-        alert("Ganador: ⭕");
+        mostrarModal("⭕");
         clearInterval(idIntervalo2);
+        removeEventListener("click", {});
       }else{
-        alert("Ganador: ❌");
+        mostrarModal("❌");
         clearInterval(idIntervalo2);
+        removeEventListener("click", {});
       }
     }else{
       const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');

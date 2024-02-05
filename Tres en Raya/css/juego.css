@@ -114,6 +114,12 @@ body{
     }
 }
 
+
+.empezado{
+    background-color: white;
+    color: black;
+}
+
 .turno{
     width: 150px;
     height: 150px;

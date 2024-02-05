@@ -74,11 +74,23 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) 
 }
   
   // Función que encuentra el mejor movimiento para un jugador dado
-  export function mejorMovimiento(tablero, jugador, opcionesGanadoras) {
+  export function mejorMovimiento(tablero, jugador, opcionesGanadoras, casillas) {
     let mejorPuntuacion = -Infinity;
     let movimiento = null;
     let alfa = -Infinity;
     let beta = Infinity;
+
+
+      // Prueba cada casilla vacía para ver si es un movimiento ganador
+      for (let j = 0; j < tablero.length; j++) {
+        if (tablero[j] === "") {
+          tablero[j] = jugador;
+          if (comprobarGanador(tablero, opcionesGanadoras) === jugador) {
+            return j; // Si hay un movimiento ganador, la IA lo hace y termina la función
+          }
+          tablero[j] = "";
+        }
+      }
   
     for (let i = 0; i < tablero.length; i++) {
       if (tablero[i] === "") {
