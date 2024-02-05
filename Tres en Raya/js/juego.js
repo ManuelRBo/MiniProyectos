@@ -364,8 +364,8 @@ empezarJuego.addEventListener("click", () => {
           jugadaJugador(casilla, tablero, jugador);
           numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
           numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
+          ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
-            ganador = comprobarGanador(tablero, opcionesGanadoras);
             if (ganador) {
               alert("Ganador: " + ganador);
               clearInterval(idIntervalo);
@@ -379,7 +379,7 @@ empezarJuego.addEventListener("click", () => {
             }
           }, 100);
         } else if (
-          numeroX.length === 3 &&
+          numeroX.length >= 3 &&
           casilla.textContent === "❌" &&
           jugador === "❌"
         ) {
@@ -397,8 +397,8 @@ empezarJuego.addEventListener("click", () => {
           jugadaJugador(casilla, tablero, jugador);
           numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
           numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
+          ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
-            ganador = comprobarGanador(tablero, opcionesGanadoras);
             if (ganador) {
               alert("Ganador: " + ganador);
               clearInterval(idIntervalo);
@@ -412,7 +412,7 @@ empezarJuego.addEventListener("click", () => {
             }
           }, 100);
         } else if (
-          numeroO.length === 3 &&
+          numeroO.length >= 3 &&
           casilla.textContent === "⭕" &&
           jugador === "⭕"
         ) {
