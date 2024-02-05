@@ -382,7 +382,7 @@ empezarJuego.addEventListener("click", () => {
               turno.textContent = jugador;
               contadorTurno(30, tiempoTurno, jugador);
             }
-          }, 100);
+          }, 0);
         } else if (
           numeroX.length >= 3 &&
           casilla.textContent === "❌" &&
@@ -416,7 +416,7 @@ empezarJuego.addEventListener("click", () => {
               turno.textContent = jugador;
               contadorTurno(30, tiempoTurno, jugador);
             }
-          }, 100);
+          }, 0);
         } else if (
           numeroO.length >= 3 &&
           casilla.textContent === "⭕" &&
