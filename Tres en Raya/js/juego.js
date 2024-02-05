@@ -8,7 +8,7 @@ import {
   idIntervalo2,
 } from "./funcionesUtiles.js";
 import { jugadaPCAleatoria } from "./1vsAleatorio.js";
-import { mejorMovimiento, mejorMovimiento6Fichas } from "./1vsIA.js";
+import { mejorMovimiento, IA } from "./1vsIA.js";
 
 const victoriasX = document.getElementById("victoriasX");
 const victoriasO = document.getElementById("victoriasO");
@@ -251,18 +251,7 @@ empezarJuego.addEventListener("click", () => {
                 contadorTurno(30, tiempoTurno, jugador);
                 // Si no hay ganador, comprobramos si hay menos de 3 O
                 if (numeroO.length >= 3) {
-                  console.log(tablero);
-                  // Si no hay ganador, se ejecuta la jugada de la PC
-                  let movimiento1 = mejorMovimiento6Fichas(
-                    tablero,
-                    jugador,
-                    opcionesGanadoras
-                  );
-                  console.log(movimiento1);
-                  tablero[movimiento1[0]] = "";
-                  casillas[movimiento1[0]].textContent = "";
-                  tablero[movimiento1[1]] = jugador;
-                  casillas[movimiento1[1]].textContent = jugador;
+                  IA(tablero, jugador, casillas, opcionesGanadoras);
                 } else {
                   let movimiento2 = mejorMovimiento(
                     tablero,
@@ -297,13 +286,13 @@ empezarJuego.addEventListener("click", () => {
           } else if (numeroX.length >= 3 && casilla.textContent === "❌") {
             let celda = casilla.getAttribute("data-celda");
             casilla.textContent = "";
-              tablero[celda] = "";
-              numeroX = casillas.filter(
-                (casilla) => casilla.textContent === "❌"
-              );
-              numeroO = casillas.filter(
-                (casilla) => casilla.textContent === "⭕"
-              );
+            tablero[celda] = "";
+            numeroX = casillas.filter(
+              (casilla) => casilla.textContent === "❌"
+            );
+            numeroO = casillas.filter(
+              (casilla) => casilla.textContent === "⭕"
+            );
           }
         }, 100);
       })
@@ -375,8 +364,8 @@ empezarJuego.addEventListener("click", () => {
           jugadaJugador(casilla, tablero, jugador);
           numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
           numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
+          ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
-            ganador = comprobarGanador(tablero, opcionesGanadoras);
             if (ganador) {
               alert("Ganador: " + ganador);
               clearInterval(idIntervalo);
@@ -390,7 +379,7 @@ empezarJuego.addEventListener("click", () => {
             }
           }, 100);
         } else if (
-          numeroX.length === 3 &&
+          numeroX.length >= 3 &&
           casilla.textContent === "❌" &&
           jugador === "❌"
         ) {
@@ -408,8 +397,8 @@ empezarJuego.addEventListener("click", () => {
           jugadaJugador(casilla, tablero, jugador);
           numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
           numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
+          ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
-            ganador = comprobarGanador(tablero, opcionesGanadoras);
             if (ganador) {
               alert("Ganador: " + ganador);
               clearInterval(idIntervalo);
@@ -423,7 +412,7 @@ empezarJuego.addEventListener("click", () => {
             }
           }, 100);
         } else if (
-          numeroO.length === 3 &&
+          numeroO.length >= 3 &&
           casilla.textContent === "⭕" &&
           jugador === "⭕"
         ) {
@@ -437,6 +426,10 @@ empezarJuego.addEventListener("click", () => {
     );
   }
 });
+
+
+
+
 
 document.getElementById("reiniciarHistorial").addEventListener("click", () => {
   reiniciarHistorial();
