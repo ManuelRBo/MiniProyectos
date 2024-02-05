@@ -43,7 +43,7 @@ empezarJuego.addEventListener("click", () => {
   let jugador = "❌";
   let ganador = null;
   contadorJuego(180, tiempoJuego, jugador);
-  contadorTurno(2, tiempoTurno, jugador);
+  contadorTurno(30, tiempoTurno, jugador);
   turno.textContent = jugador;
 
   // Modo 1: Aleatorio y 9 fichas
