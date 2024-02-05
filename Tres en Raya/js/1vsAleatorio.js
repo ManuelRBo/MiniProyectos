@@ -8,7 +8,7 @@ export function jugadaPCAleatoria(casillas, tablero, jugador, celdaAleatoria) {
       tablero[jugada] = jugador;
       casillaElegida.textContent = jugador;
     } else {
-      jugadaPCAleatoria(casillas, tablero, jugador);
+      jugadaPCAleatoria(casillas, tablero, jugador, celdaAleatoria);
     }
   }, 1);
 }
@@ -18,6 +18,6 @@ function eleccionAleatoria(tablero, celdaAleatoria){
     if(tablero[celda] === "" && celda !== celdaAleatoria){
         return celda;
     } else {
-        return eleccionAleatoria(tablero);
+        return eleccionAleatoria(tablero, celdaAleatoria);
     }
 }

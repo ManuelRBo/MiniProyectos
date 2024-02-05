@@ -91,6 +91,7 @@ empezarJuego.addEventListener("click", () => {
     );
     // Modo 2: Aleatorio y 6 fichas
   } else if (modo === "1" && fichas === "6") {
+    let celda;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
         //Guardamos en una variable el número de casillas que contienen una X o una O
@@ -105,7 +106,8 @@ empezarJuego.addEventListener("click", () => {
             casilla.textContent === "" &&
             ganador === null &&
             jugador === "❌" &&
-            numeroX.length < 3
+            numeroX.length < 3 &&
+            celda !== casilla.getAttribute("data-celda")
           ) {
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
@@ -141,7 +143,6 @@ empezarJuego.addEventListener("click", () => {
                 setTimeout(() => {
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
-                  console.log(tablero);
                   if (ganador) {
                     alert("Ganador: " + ganador);
                     clearInterval(idIntervalo);
@@ -154,7 +155,7 @@ empezarJuego.addEventListener("click", () => {
             }, 500);
             // Si hay 3 X, se elimina una X aleatoria
           } else if (numeroX.length >= 2 && casilla.textContent === "❌") {
-            let celda = casilla.getAttribute("data-celda");
+            celda = casilla.getAttribute("data-celda");
             casilla.textContent = "";
             tablero[celda] = "";
           }
