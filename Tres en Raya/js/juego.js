@@ -132,9 +132,8 @@ empezarJuego.addEventListener("click", () => {
                     Math.random() * numeroO.length
                   );
                   numeroO[celdaAleatoria].textContent = "";
-                  tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] =
-                    "";
-                  jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
+                  tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] ="";
+                  jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno, celdaAleatoria);
                 }
                 jugador = "❌";
                 turno.textContent = jugador;
