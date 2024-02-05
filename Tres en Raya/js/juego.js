@@ -59,8 +59,8 @@ empezarJuego.addEventListener("click", () => {
           turno.textContent = jugador;
           contadorTurno(30, tiempoTurno, jugador);
           // Comprobar si hay ganador después de la jugada del jugador
+          ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
-            ganador = comprobarGanador(tablero, opcionesGanadoras);
             // Si hay ganador, se muestra el mensaje
             if (ganador) {
               alert("Ganador: " + ganador);
@@ -85,7 +85,7 @@ empezarJuego.addEventListener("click", () => {
                 }
               }, 100);
             }
-          }, 500);
+          }, 100);
         }
       })
     );
@@ -152,7 +152,7 @@ empezarJuego.addEventListener("click", () => {
                   }
                 }, 100);
               }
-            }, 500);
+            }, 100);
             // Si hay 3 X, se elimina una X aleatoria
           } else if (numeroX.length >= 2 && casilla.textContent === "❌") {
             celda = casilla.getAttribute("data-celda");
@@ -205,12 +205,13 @@ empezarJuego.addEventListener("click", () => {
                 }
               }, 100);
             }
-          }, 500);
+          }, 100);
         }
       })
     );
     //Modo 4: IA y 6 fichas
   } else if (modo === "2" && fichas === "6") {
+    let celda;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
         //Guardamos en una variable el número de casillas que contienen una X o una O
@@ -225,7 +226,8 @@ empezarJuego.addEventListener("click", () => {
             casilla.textContent === "" &&
             ganador === null &&
             jugador === "❌" &&
-            numeroX.length < 3
+            numeroX.length < 3 &&
+            celda !== casilla.getAttribute("data-celda")
           ) {
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
@@ -284,7 +286,7 @@ empezarJuego.addEventListener("click", () => {
             }, 100);
             // Si hay 3 X, se elimina una X
           } else if (numeroX.length >= 3 && casilla.textContent === "❌") {
-            let celda = casilla.getAttribute("data-celda");
+            celda = casilla.getAttribute("data-celda");
             casilla.textContent = "";
             tablero[celda] = "";
             numeroX = casillas.filter(
@@ -347,6 +349,8 @@ empezarJuego.addEventListener("click", () => {
       })
     );
   } else if (modo === "3" && fichas === "6") {
+    let celdaX;
+    let celdaO;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
         let numeroO = casillas.filter(
@@ -359,7 +363,8 @@ empezarJuego.addEventListener("click", () => {
           ganador === null &&
           jugador === "❌" &&
           casilla.textContent === "" &&
-          numeroX.length < 3
+          numeroX.length < 3 &&
+          celdaX !== casilla.getAttribute("data-celda")
         ) {
           jugadaJugador(casilla, tablero, jugador);
           numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
@@ -383,16 +388,17 @@ empezarJuego.addEventListener("click", () => {
           casilla.textContent === "❌" &&
           jugador === "❌"
         ) {
-          let celda = casilla.getAttribute("data-celda");
+          celdaX = casilla.getAttribute("data-celda");
           casilla.textContent = "";
-          tablero[celda] = "";
+          tablero[celdaX] = "";
           numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
           numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
         } else if (
           ganador === null &&
           jugador === "⭕" &&
           casilla.textContent === "" &&
-          numeroO.length <= 2
+          numeroO.length <= 2 &&
+          celdaO !== casilla.getAttribute("data-celda")
         ) {
           jugadaJugador(casilla, tablero, jugador);
           numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
@@ -416,9 +422,9 @@ empezarJuego.addEventListener("click", () => {
           casilla.textContent === "⭕" &&
           jugador === "⭕"
         ) {
-          let celda = casilla.getAttribute("data-celda");
+          celdaO = casilla.getAttribute("data-celda");
           casilla.textContent = "";
-          tablero[celda] = "";
+          tablero[celdaO] = "";
           numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
           numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
         }
