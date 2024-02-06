@@ -101,7 +101,6 @@ empezarJuego.addEventListener("click", () => {
     let celda;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
-        console.log(tablero);
         //Guardamos en una variable el número de casillas que contienen una X o una O
         let numeroX = casillas.filter(
           (casilla) => casilla.textContent === "❌"
@@ -109,6 +108,7 @@ empezarJuego.addEventListener("click", () => {
         let numeroO = casillas.filter(
           (casilla) => casilla.textContent === "⭕"
         );
+        setTimeout(() => {
           if (
             casilla.textContent === "" &&
             ganador === null &&
@@ -117,7 +117,6 @@ empezarJuego.addEventListener("click", () => {
             celda !== casilla.getAttribute("data-celda") &&
             !terminado
           ) {
-            celda = null;
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
             numeroX = casillas.filter(
@@ -144,7 +143,7 @@ empezarJuego.addEventListener("click", () => {
                 // Si no hay ganador, comprobramos si hay menos de 3 O
                 if (numeroO.length <= 2 && jugador === "⭕") {
                   // Si no hay ganador, se ejecuta la jugada de la PC
-                  jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
+                  jugadaPCAleatoria(casillas, tablero, jugador);
                 } else if(numeroO.length >= 3 && jugador === "⭕"){
                   // Si hay 3 O, se elimina una O aleatoria
                   let celdaAleatoria = Math.floor(
@@ -152,11 +151,14 @@ empezarJuego.addEventListener("click", () => {
                   );
                   numeroO[celdaAleatoria].textContent = "";
                   tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] = "";
+                  numeroO = casillas.filter(
+                    (casilla) => casilla.textContent === "⭕"
+                  );
+                  console.log(numeroO);
                   jugadaPCAleatoria(
                     casillas,
                     tablero,
                     jugador,
-                    tiempoTurno,
                     celdaAleatoria
                   );
                   numeroX = casillas.filter(
@@ -165,6 +167,7 @@ empezarJuego.addEventListener("click", () => {
                   numeroO = casillas.filter(
                     (casilla) => casilla.textContent === "⭕"
                   );
+                  console.log(numeroO);
                 }
                 jugador = "❌";
                 turno.textContent = jugador;
@@ -196,6 +199,7 @@ empezarJuego.addEventListener("click", () => {
               (casilla) => casilla.textContent === "⭕"
             );
           }
+        },100);
       })
     );
     //Modo 3: IA y 9 fichas
