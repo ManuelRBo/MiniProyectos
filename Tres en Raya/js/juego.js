@@ -101,6 +101,7 @@ empezarJuego.addEventListener("click", () => {
     let celda;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
+        console.log(tablero);
         //Guardamos en una variable el número de casillas que contienen una X o una O
         let numeroX = casillas.filter(
           (casilla) => casilla.textContent === "❌"
@@ -108,23 +109,29 @@ empezarJuego.addEventListener("click", () => {
         let numeroO = casillas.filter(
           (casilla) => casilla.textContent === "⭕"
         );
-        setTimeout(() => {
           if (
             casilla.textContent === "" &&
             ganador === null &&
             jugador === "❌" &&
-            numeroX.length < 3 &&
+            numeroX.length <= 2 &&
             celda !== casilla.getAttribute("data-celda") &&
             !terminado
           ) {
+            celda = null;
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
+            numeroX = casillas.filter(
+              (casilla) => casilla.textContent === "❌"
+            );
+            numeroO = casillas.filter(
+              (casilla) => casilla.textContent === "⭕"
+            );
+            // Comprobar si hay ganador después de la jugada del jugador
+            ganador = comprobarGanador(tablero, opcionesGanadoras);
             jugador = "⭕";
             turno.textContent = jugador;
             contadorTurno(30, tiempoTurno, jugador);
             setTimeout(() => {
-              // Comprobar si hay ganador después de la jugada del jugador
-              ganador = comprobarGanador(tablero, opcionesGanadoras);
               // Si hay ganador, se muestra el mensaje
               if (ganador) {
                 mostrarModal(ganador);
@@ -135,23 +142,28 @@ empezarJuego.addEventListener("click", () => {
                 empezarJuego.classList.remove("empezado");
               } else {
                 // Si no hay ganador, comprobramos si hay menos de 3 O
-                if (numeroO.length < 3) {
+                if (numeroO.length <= 2 && jugador === "⭕") {
                   // Si no hay ganador, se ejecuta la jugada de la PC
                   jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
-                } else {
+                } else if(numeroO.length >= 3 && jugador === "⭕"){
                   // Si hay 3 O, se elimina una O aleatoria
                   let celdaAleatoria = Math.floor(
                     Math.random() * numeroO.length
                   );
                   numeroO[celdaAleatoria].textContent = "";
-                  tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] =
-                    "";
+                  tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] = "";
                   jugadaPCAleatoria(
                     casillas,
                     tablero,
                     jugador,
                     tiempoTurno,
                     celdaAleatoria
+                  );
+                  numeroX = casillas.filter(
+                    (casilla) => casilla.textContent === "❌"
+                  );
+                  numeroO = casillas.filter(
+                    (casilla) => casilla.textContent === "⭕"
                   );
                 }
                 jugador = "❌";
@@ -168,16 +180,22 @@ empezarJuego.addEventListener("click", () => {
                     removeEventListener("click", () => {}); 
                     empezarJuego.classList.remove("empezado");
                   }
+                  console.log(tablero);
                 }, 100);
               }
             }, 100);
             // Si hay 3 X, se elimina una X aleatoria
-          } else if (numeroX.length >= 2 && casilla.textContent === "❌") {
+          } else if (numeroX.length >= 3 && casilla.textContent === "❌" && jugador === "❌") {
             celda = casilla.getAttribute("data-celda");
             casilla.textContent = "";
             tablero[celda] = "";
+            numeroX = casillas.filter(
+              (casilla) => casilla.textContent === "❌"
+            );
+            numeroO = casillas.filter(
+              (casilla) => casilla.textContent === "⭕"
+            );
           }
-        }, 100);
       })
     );
     //Modo 3: IA y 9 fichas
@@ -480,8 +498,8 @@ document.getElementById("volverMenu").addEventListener("click", () => {
 // Funcion para la jugada del jugador
 function jugadaJugador(casilla, tablero, jugador) {
   casilla.textContent = jugador;
-  let celda = casilla.getAttribute("data-celda");
-  tablero[celda] = jugador;
+  let celdaX = casilla.getAttribute("data-celda");
+  tablero[celdaX] = jugador;
 }
 
 function sumarHistorial(ganador) {
