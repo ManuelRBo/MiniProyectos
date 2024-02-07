@@ -14,7 +14,10 @@ export function mostrarModal(ganador) {
         document.getElementById('modal-ganador').style.height = '200px';
     }else{
         resultado.textContent = 'Ganador';
+        simboloGanador.style.display = 'block';
         simboloGanador.textContent = ganador;
+        document.getElementById('modal-ganador').style.width = '300px';
+        document.getElementById('modal-ganador').style.height = '400px';
     }
 }
 
