@@ -7,6 +7,11 @@ import {
   idIntervalo,
   idIntervalo2,
   terminado,
+  jugadaJugador,
+  sumarHistorial,
+  reiniciarHistorial,
+  actualizarNumeroO,
+  actualizarNumeroX,
 } from "./funcionesUtiles.js";
 import { jugadaPCAleatoria } from "./1vsAleatorio.js";
 import { mejorMovimiento, IA } from "./1vsIA.js";
@@ -450,55 +455,4 @@ document.getElementById("volverMenu").addEventListener("click", () => {
   window.location.href = "../menu.html";
 });
 
-// Funcion para la jugada del jugador
-function jugadaJugador(casilla, tablero, jugador) {
-  casilla.textContent = jugador;
-  let celdaX = casilla.getAttribute("data-celda");
-  tablero[celdaX] = jugador;
-}
 
-function sumarHistorial(ganador) {
-  let victorias_X = parseInt(victoriasX.textContent);
-  let derrotas_X = parseInt(derrotasX.textContent);
-  let victorias_O = parseInt(victoriasO.textContent);
-  let derrotas_O = parseInt(derrotasO.textContent);
-  if (ganador === "❌") {
-    victorias_X++;
-    derrotas_O++;
-    victoriasX.textContent = victorias_X;
-    derrotasO.textContent = derrotas_O;
-  } else if (ganador === "⭕") {
-    victorias_O++;
-    derrotas_X++;
-    victoriasO.textContent = victorias_O;
-    derrotasX.textContent = derrotas_X;
-  }
-}
-
-function reiniciarHistorial() {
-  victoriasX.textContent = 0;
-  victoriasO.textContent = 0;
-  derrotasX.textContent = 0;
-  derrotasO.textContent = 0;
-}
-
-
-function actualizarNumeroX(tablero){
-  let numeroX = [];
-  for (let i = 0; i < tablero.length; i++) {
-    if (tablero[i] === "❌") {
-      numeroX.push(i);
-    }
-  }
-  return numeroX;
-}
-
-function actualizarNumeroO(tablero){
-  let numeroO = [];
-  for (let i = 0; i < tablero.length; i++) {
-    if (tablero[i] === "⭕") {
-      numeroO.push(i);
-    }
-  }
-  return numeroO;
-}
