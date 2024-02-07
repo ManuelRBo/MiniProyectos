@@ -339,16 +339,12 @@ empezarJuego.addEventListener("click", () => {
   })
 );
   } else if (modo === "3" && fichas === "6") {
-    let celdaX;
-    let celdaO;
+    let celdaX = null;
+    let celdaO = null;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
-        let numeroO = casillas.filter(
-          (casilla) => casilla.textContent === "⭕"
-        );
-        let numeroX = casillas.filter(
-          (casilla) => casilla.textContent === "❌"
-        );
+        let numeroO = actualizarNumeroO(tablero);
+        let numeroX = actualizarNumeroX(tablero);
         if (
           ganador === null &&
           jugador === "❌" &&
@@ -358,8 +354,7 @@ empezarJuego.addEventListener("click", () => {
           !terminado
         ) {
           jugadaJugador(casilla, tablero, jugador);
-          numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
-          numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
+          numeroX = actualizarNumeroX(tablero);
           ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
             if (ganador) {
@@ -384,8 +379,7 @@ empezarJuego.addEventListener("click", () => {
           celdaX = casilla.getAttribute("data-celda");
           casilla.textContent = "";
           tablero[celdaX] = "";
-          numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
-          numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
+          numeroX = actualizarNumeroX(tablero);
         } else if (
           ganador === null &&
           jugador === "⭕" &&
@@ -395,8 +389,7 @@ empezarJuego.addEventListener("click", () => {
           !terminado
         ) {
           jugadaJugador(casilla, tablero, jugador);
-          numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
-          numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
+          numeroO = actualizarNumeroO(tablero);
           ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
             if (ganador) {
@@ -421,8 +414,7 @@ empezarJuego.addEventListener("click", () => {
           celdaO = casilla.getAttribute("data-celda");
           casilla.textContent = "";
           tablero[celdaO] = "";
-          numeroX = casillas.filter((casilla) => casilla.textContent === "❌");
-          numeroO = casillas.filter((casilla) => casilla.textContent === "⭕");
+          numeroO = actualizarNumeroO(tablero);
         }
       })
     );
