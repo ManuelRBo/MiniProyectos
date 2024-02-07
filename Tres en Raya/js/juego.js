@@ -12,6 +12,7 @@ import { jugadaPCAleatoria } from "./1vsAleatorio.js";
 import { mejorMovimiento, IA } from "./1vsIA.js";
 import { mostrarModal } from "./modal.js";
 
+const modoJuego = document.getElementById("modoJuego");
 const victoriasX = document.getElementById("victoriasX");
 const victoriasO = document.getElementById("victoriasO");
 const derrotasX = document.getElementById("derrotasX");
@@ -35,6 +36,26 @@ let opcionesGanadoras = [
   [2, 4, 6], // 8
 ];
 let tablero = Array(9).fill("");
+
+if(modo === "1"){
+  if(fichas === "9"){
+    modoJuego.textContent = "1 vs Aleatorio | 9 fichas";
+  }else if(fichas === "6"){
+    modoJuego.textContent = "1 vs Aleatorio | 6 fichas";
+  }
+}else if(modo === "2"){
+  if(fichas === "9"){
+    modoJuego.textContent = "1 vs IA | 9 fichas";
+  }else if(fichas === "6"){
+    modoJuego.textContent = "1 vs IA | 6 fichas";
+  }
+}else if(modo === "3"){
+  if(fichas === "9"){
+    modoJuego.textContent = "1 vs 1 | 9 fichas";
+  }else if(fichas === "6"){
+    modoJuego.textContent = "1 vs 1 | 6 fichas";
+  }
+}
 
 empezarJuego.addEventListener("click", () => {
   empezarJuego.classList.add("empezado");

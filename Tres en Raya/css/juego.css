@@ -56,6 +56,19 @@ body{
     font-size: 3rem;
 }
 
+.tipo-turno{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+     & h1{
+        font-size: 2rem;
+        color: white;
+        margin: 0;
+     }
+}
+
 .tiempo-turno{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
