@@ -75,7 +75,7 @@ empezarJuego.addEventListener("click", () => {
               empezarJuego.classList.remove("empezado");
             } else {
               // Si no hay ganador, se ejecuta la jugada de la PC
-              jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
+              jugadaPCAleatoria(casillas, tablero, jugador);
               jugador = "❌";
               turno.textContent = jugador;
               contadorTurno(30, tiempoTurno, jugador);
@@ -98,17 +98,12 @@ empezarJuego.addEventListener("click", () => {
     );
     // Modo 2: Aleatorio y 6 fichas
   } else if (modo === "1" && fichas === "6") {
-    let celda;
+    let celda = null;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
         //Guardamos en una variable el número de casillas que contienen una X o una O
-        let numeroX = casillas.filter(
-          (casilla) => casilla.textContent === "❌"
-        );
-        let numeroO = casillas.filter(
-          (casilla) => casilla.textContent === "⭕"
-        );
-        setTimeout(() => {
+        let numeroX = actualizarNumeroX(tablero);
+        let numeroO = actualizarNumeroO(tablero);
           if (
             casilla.textContent === "" &&
             ganador === null &&
@@ -119,12 +114,7 @@ empezarJuego.addEventListener("click", () => {
           ) {
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
-            numeroX = casillas.filter(
-              (casilla) => casilla.textContent === "❌"
-            );
-            numeroO = casillas.filter(
-              (casilla) => casilla.textContent === "⭕"
-            );
+            numeroX = actualizarNumeroX(tablero);
             // Comprobar si hay ganador después de la jugada del jugador
             ganador = comprobarGanador(tablero, opcionesGanadoras);
             jugador = "⭕";
@@ -144,30 +134,22 @@ empezarJuego.addEventListener("click", () => {
                 if (numeroO.length <= 2 && jugador === "⭕") {
                   // Si no hay ganador, se ejecuta la jugada de la PC
                   jugadaPCAleatoria(casillas, tablero, jugador);
+                  numeroO = actualizarNumeroO(tablero);
                 } else if(numeroO.length >= 3 && jugador === "⭕"){
                   // Si hay 3 O, se elimina una O aleatoria
                   let celdaAleatoria = Math.floor(
                     Math.random() * numeroO.length
                   );
-                  numeroO[celdaAleatoria].textContent = "";
-                  tablero[numeroO[celdaAleatoria].getAttribute("data-celda")] = "";
-                  numeroO = casillas.filter(
-                    (casilla) => casilla.textContent === "⭕"
-                  );
-                  console.log(numeroO);
                   jugadaPCAleatoria(
                     casillas,
                     tablero,
                     jugador,
-                    celdaAleatoria
+                    numeroO[celdaAleatoria]
                   );
-                  numeroX = casillas.filter(
-                    (casilla) => casilla.textContent === "❌"
-                  );
-                  numeroO = casillas.filter(
-                    (casilla) => casilla.textContent === "⭕"
-                  );
-                  console.log(numeroO);
+                  numeroO = actualizarNumeroO(tablero);
+                  casillas[numeroO[celdaAleatoria]].textContent = "";
+                  tablero[numeroO[celdaAleatoria]] = "";
+                  numeroO = actualizarNumeroO(tablero);
                 }
                 jugador = "❌";
                 turno.textContent = jugador;
@@ -183,7 +165,6 @@ empezarJuego.addEventListener("click", () => {
                     removeEventListener("click", () => {}); 
                     empezarJuego.classList.remove("empezado");
                   }
-                  console.log(tablero);
                 }, 100);
               }
             }, 100);
@@ -192,14 +173,8 @@ empezarJuego.addEventListener("click", () => {
             celda = casilla.getAttribute("data-celda");
             casilla.textContent = "";
             tablero[celda] = "";
-            numeroX = casillas.filter(
-              (casilla) => casilla.textContent === "❌"
-            );
-            numeroO = casillas.filter(
-              (casilla) => casilla.textContent === "⭕"
-            );
+            numeroX = actualizarNumeroX(tablero);
           }
-        },100);
       })
     );
     //Modo 3: IA y 9 fichas
@@ -529,4 +504,25 @@ function reiniciarHistorial() {
   victoriasO.textContent = 0;
   derrotasX.textContent = 0;
   derrotasO.textContent = 0;
+}
+
+
+function actualizarNumeroX(tablero){
+  let numeroX = [];
+  for (let i = 0; i < tablero.length; i++) {
+    if (tablero[i] === "❌") {
+      numeroX.push(i);
+    }
+  }
+  return numeroX;
+}
+
+function actualizarNumeroO(tablero){
+  let numeroO = [];
+  for (let i = 0; i < tablero.length; i++) {
+    if (tablero[i] === "⭕") {
+      numeroO.push(i);
+    }
+  }
+  return numeroO;
 }
