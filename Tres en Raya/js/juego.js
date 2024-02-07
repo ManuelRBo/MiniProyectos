@@ -6,18 +6,22 @@ import {
   contadorJuego,
   idIntervalo,
   idIntervalo2,
+  terminado,
+  jugadaJugador,
+  sumarHistorial,
+  reiniciarHistorial,
+  actualizarNumeroO,
+  actualizarNumeroX,
 } from "./funcionesUtiles.js";
 import { jugadaPCAleatoria } from "./1vsAleatorio.js";
-import { mejorMovimiento, mejorMovimiento6Fichas } from "./1vsIA.js";
+import { mejorMovimiento, IA } from "./1vsIA.js";
+import { mostrarModal } from "./modal.js";
 
-const victoriasX = document.getElementById("victoriasX");
-const victoriasO = document.getElementById("victoriasO");
-const derrotasX = document.getElementById("derrotasX");
-const derrotasO = document.getElementById("derrotasO");
+const modoJuego = document.getElementById("modoJuego");
 const tiempoTurno = document.getElementById("tiempo-jugador");
 const tiempoJuego = document.getElementById("tiempo");
 const empezarJuego = document.getElementById("empezar-juego");
-const casillas = Array.from(document.querySelectorAll(".casilla"));
+let casillas = Array.from(document.querySelectorAll(".casilla"));
 const turno = document.getElementById("turno");
 turno.textContent = "❌";
 const modo = extraerModo();
@@ -32,15 +36,45 @@ let opcionesGanadoras = [
   [0, 4, 8], // 7
   [2, 4, 6], // 8
 ];
+let tablero = Array(9).fill("");
+
+if(modo === "1"){
+  if(fichas === "9"){
+    modoJuego.textContent = "1 vs Aleatorio | 9 fichas";
+  }else if(fichas === "6"){
+    modoJuego.textContent = "1 vs Aleatorio | 6 fichas";
+  }
+}else if(modo === "2"){
+  if(fichas === "9"){
+    modoJuego.textContent = "1 vs IA | 9 fichas";
+  }else if(fichas === "6"){
+    modoJuego.textContent = "1 vs IA | 6 fichas";
+  }
+}else if(modo === "3"){
+  if(fichas === "9"){
+    modoJuego.textContent = "1 vs 1 | 9 fichas";
+  }else if(fichas === "6"){
+    modoJuego.textContent = "1 vs 1 | 6 fichas";
+  }
+}
 
 empezarJuego.addEventListener("click", () => {
-  let tablero = Array(9).fill("");
+  empezarJuego.classList.add("empezado");
+  tablero.fill("");
   casillas.forEach((casilla) => (casilla.textContent = ""));
   let jugador = "❌";
   let ganador = null;
   contadorJuego(180, tiempoJuego, jugador);
   contadorTurno(30, tiempoTurno, jugador);
   turno.textContent = jugador;
+
+  // Eliminar todos los eventos de escucha de las casillas
+  casillas.forEach((casilla) => {
+    let newCasilla = casilla.cloneNode(true);
+    casilla.parentNode.replaceChild(newCasilla, casilla);
+  });
+
+  casillas = Array.from(document.querySelectorAll(".casilla"));
 
   // Modo 1: Aleatorio y 9 fichas
   if (modo === "1" && fichas === "9") {
@@ -50,7 +84,8 @@ empezarJuego.addEventListener("click", () => {
         if (
           casilla.textContent === "" &&
           ganador === null &&
-          jugador === "❌"
+          jugador === "❌" &&
+          !terminado
         ) {
           // Si no hay ganador, se ejecuta la jugada del jugador
           jugadaJugador(casilla, tablero, jugador);
@@ -58,17 +93,19 @@ empezarJuego.addEventListener("click", () => {
           turno.textContent = jugador;
           contadorTurno(30, tiempoTurno, jugador);
           // Comprobar si hay ganador después de la jugada del jugador
+          ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
-            ganador = comprobarGanador(tablero, opcionesGanadoras);
             // Si hay ganador, se muestra el mensaje
             if (ganador) {
-              alert("Ganador: " + ganador);
+              mostrarModal(ganador);
               clearInterval(idIntervalo);
               clearInterval(idIntervalo2);
               sumarHistorial(ganador);
+              removeEventListener("click", () => {});
+              empezarJuego.classList.remove("empezado");
             } else {
               // Si no hay ganador, se ejecuta la jugada de la PC
-              jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
+              jugadaPCAleatoria(casillas, tablero, jugador);
               jugador = "❌";
               turno.textContent = jugador;
               contadorTurno(30, tiempoTurno, jugador);
@@ -76,11 +113,12 @@ empezarJuego.addEventListener("click", () => {
                 // Comprobar si hay ganador después de la jugada de la PC
                 ganador = comprobarGanador(tablero, opcionesGanadoras);
                 if (ganador) {
-                  alert("Ganador: " + ganador);
+                  mostrarModal(ganador);
                   clearInterval(idIntervalo);
                   clearInterval(idIntervalo2);
                   sumarHistorial(ganador);
                   removeEventListener("click", () => {});
+                  empezarJuego.classList.remove("empezado");
                 }
               }, 100);
             }
@@ -90,57 +128,58 @@ empezarJuego.addEventListener("click", () => {
     );
     // Modo 2: Aleatorio y 6 fichas
   } else if (modo === "1" && fichas === "6") {
+    let celda = null;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
         //Guardamos en una variable el número de casillas que contienen una X o una O
-        let numeroX = casillas.filter(
-          (casilla) => casilla.textContent === "❌"
-        );
-        let numeroO = casillas.filter(
-          (casilla) => casilla.textContent === "⭕"
-        );
-        setTimeout(() => {
+        let numeroX = actualizarNumeroX(tablero);
+        let numeroO = actualizarNumeroO(tablero);
           if (
             casilla.textContent === "" &&
             ganador === null &&
             jugador === "❌" &&
-            numeroX.length < 3
+            numeroX.length <= 2 &&
+            celda !== casilla.getAttribute("data-celda") &&
+            !terminado
           ) {
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
+            numeroX = actualizarNumeroX(tablero);
+            // Comprobar si hay ganador después de la jugada del jugador
+            ganador = comprobarGanador(tablero, opcionesGanadoras);
             jugador = "⭕";
             turno.textContent = jugador;
             contadorTurno(30, tiempoTurno, jugador);
             setTimeout(() => {
-              // Comprobar si hay ganador después de la jugada del jugador
-              ganador = comprobarGanador(tablero, opcionesGanadoras);
               // Si hay ganador, se muestra el mensaje
               if (ganador) {
-                alert("Ganador: " + ganador);
+                mostrarModal(ganador);
                 clearInterval(idIntervalo);
                 clearInterval(idIntervalo2);
                 sumarHistorial(ganador);
+                removeEventListener("click", () => {});
+                empezarJuego.classList.remove("empezado");
               } else {
                 // Si no hay ganador, comprobramos si hay menos de 3 O
-                if (numeroO.length < 3) {
+                if (numeroO.length <= 2 && jugador === "⭕") {
                   // Si no hay ganador, se ejecuta la jugada de la PC
-                  jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
-                } else {
+                  jugadaPCAleatoria(casillas, tablero, jugador);
+                  numeroO = actualizarNumeroO(tablero);
+                } else if(numeroO.length >= 3 && jugador === "⭕"){
                   // Si hay 3 O, se elimina una O aleatoria
                   let celdaAleatoria = Math.floor(
                     Math.random() * numeroO.length
                   );
-                  numeroO[celdaAleatoria].textContent = "";
-                  if (
-                    tablero[
-                      numeroO[celdaAleatoria].getAttribute("data-celda")
-                    ] === "⭕"
-                  ) {
-                    tablero[
-                      numeroO[celdaAleatoria].getAttribute("data-celda")
-                    ] = "";
-                  }
-                  jugadaPCAleatoria(casillas, tablero, jugador, tiempoTurno);
+                  jugadaPCAleatoria(
+                    casillas,
+                    tablero,
+                    jugador,
+                    numeroO[celdaAleatoria]
+                  );
+                  numeroO = actualizarNumeroO(tablero);
+                  casillas[numeroO[celdaAleatoria]].textContent = "";
+                  tablero[numeroO[celdaAleatoria]] = "";
+                  numeroO = actualizarNumeroO(tablero);
                 }
                 jugador = "❌";
                 turno.textContent = jugador;
@@ -149,31 +188,30 @@ empezarJuego.addEventListener("click", () => {
                   // Comprobar si hay ganador después de la jugada de la PC
                   ganador = comprobarGanador(tablero, opcionesGanadoras);
                   if (ganador) {
-                    alert("Ganador: " + ganador);
+                    mostrarModal(ganador);
                     clearInterval(idIntervalo);
                     clearInterval(idIntervalo2);
-                    removeEventListener("click", () => {});
                     sumarHistorial(ganador);
+                    removeEventListener("click", () => {}); 
+                    empezarJuego.classList.remove("empezado");
                   }
                 }, 100);
               }
             }, 100);
             // Si hay 3 X, se elimina una X aleatoria
-          } else if (numeroX.length >= 2 && casilla.textContent === "❌") {
-            let celda = casilla.getAttribute("data-celda");
+          } else if (numeroX.length >= 3 && casilla.textContent === "❌" && jugador === "❌") {
+            celda = casilla.getAttribute("data-celda");
             casilla.textContent = "";
-            if (tablero[celda] === "❌") {
-              tablero[celda] = "";
-            }
+            tablero[celda] = "";
+            numeroX = actualizarNumeroX(tablero);
           }
-        }, 100);
       })
     );
     //Modo 3: IA y 9 fichas
   } else if (modo === "2" && fichas === "9") {
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
-        if (casilla.textContent == "" && ganador == null && jugador == "❌") {
+        if (casilla.textContent == "" && ganador == null && jugador == "❌" && !terminado) {
           // Si no hay ganador, se ejecuta la jugada del jugador
           jugadaJugador(casilla, tablero, jugador);
           jugador = "⭕";
@@ -184,17 +222,20 @@ empezarJuego.addEventListener("click", () => {
             ganador = comprobarGanador(tablero, opcionesGanadoras);
             // Si hay ganador, se muestra el mensaje
             if (ganador) {
-              alert("Ganador: " + ganador);
+              mostrarModal(ganador);
               clearInterval(idIntervalo);
               clearInterval(idIntervalo2);
               sumarHistorial(ganador);
+              removeEventListener("click", () => {});
+              empezarJuego.classList.remove("empezado");
             } else {
               // Si no hay ganador, se ejecuta la jugada de la PC
               contadorTurno(30, tiempoTurno, jugador);
               let movimiento = mejorMovimiento(
                 tablero,
                 jugador,
-                opcionesGanadoras
+                opcionesGanadoras,
+                casillas
               );
               tablero[movimiento] = jugador;
               casillas[movimiento].textContent = jugador;
@@ -204,11 +245,12 @@ empezarJuego.addEventListener("click", () => {
                 // Comprobar si hay ganador después de la jugada de la PC
                 ganador = comprobarGanador(tablero, opcionesGanadoras);
                 if (ganador) {
-                  alert("Ganador: " + ganador);
+                  mostrarModal(ganador);
                   clearInterval(idIntervalo);
                   clearInterval(idIntervalo2);
-                  removeEventListener("click", () => {});
                   sumarHistorial(ganador);
+                  removeEventListener("click", () => {});
+                  empezarJuego.classList.remove("empezado");
                 }
               }, 100);
             }
@@ -218,227 +260,183 @@ empezarJuego.addEventListener("click", () => {
     );
     //Modo 4: IA y 6 fichas
   } else if (modo === "2" && fichas === "6") {
+    let celda = null;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
         //Guardamos en una variable el número de casillas que contienen una X o una O
-        let numeroX = casillas.filter(
-          (casilla) => casilla.textContent === "❌"
-        );
-        let numeroO = casillas.filter(
-          (casilla) => casilla.textContent === "⭕"
-        );
-        setTimeout(() => {
+        let numeroX = actualizarNumeroX(tablero);
+        let numeroO = actualizarNumeroO(tablero);
           if (
             casilla.textContent === "" &&
             ganador === null &&
             jugador === "❌" &&
-            numeroX.length < 3
+            numeroX.length < 3 &&
+            celda !== casilla.getAttribute("data-celda") &&
+            !terminado
           ) {
+            console.log(celda);
             // Si no hay ganador, se ejecuta la jugada del jugador
             jugadaJugador(casilla, tablero, jugador);
+            numeroX = actualizarNumeroX(tablero);
             jugador = "⭕";
             turno.textContent = jugador;
             contadorTurno(30, tiempoTurno, jugador);
+            ganador = comprobarGanador(tablero, opcionesGanadoras);
             setTimeout(() => {
-              numeroX = casillas.filter(
-                (casilla) => casilla.textContent === "❌"
-              );
-              numeroO = casillas.filter(
-                (casilla) => casilla.textContent === "⭕"
-              );
-              // Comprobar si hay ganador después de la jugada del jugador
-              ganador = comprobarGanador(tablero, opcionesGanadoras);
               // Si hay ganador, se muestra el mensaje
               if (ganador) {
-                alert("Ganador: " + ganador);
+                mostrarModal(ganador);
                 clearInterval(idIntervalo);
                 clearInterval(idIntervalo2);
                 sumarHistorial(ganador);
+                removeEventListener("click", () => {});
+                empezarJuego.classList.remove("empezado");
               } else {
                 contadorTurno(30, tiempoTurno, jugador);
                 // Si no hay ganador, comprobramos si hay menos de 3 O
                 if (numeroO.length >= 3) {
-                  // Si no hay ganador, se ejecuta la jugada de la PC
-                  let movimiento1 = mejorMovimiento6Fichas(
-                    tablero,
-                    jugador,
-                    opcionesGanadoras
-                  );
-                  tablero[movimiento1.quitar] = "";
-                  casillas[movimiento1.quitar].textContent = "";
-                  tablero[movimiento1.poner] = jugador;
-                  casillas[movimiento1.poner].textContent = jugador;
+                  IA(tablero, jugador, casillas, opcionesGanadoras);
+                  numeroO = actualizarNumeroO(tablero);
                 } else {
                   let movimiento2 = mejorMovimiento(
                     tablero,
                     jugador,
-                    opcionesGanadoras
+                    opcionesGanadoras,
+                    casillas
                   );
                   tablero[movimiento2] = jugador;
                   casillas[movimiento2].textContent = jugador;
                 }
+                numeroO = actualizarNumeroO(tablero);
                 jugador = "❌";
                 turno.textContent = jugador;
+                ganador = comprobarGanador(tablero, opcionesGanadoras);
                 setTimeout(() => {
-                  numeroX = casillas.filter(
-                    (casilla) => casilla.textContent === "❌"
-                  );
-                  numeroO = casillas.filter(
-                    (casilla) => casilla.textContent === "⭕"
-                  );
                   // Comprobar si hay ganador después de la jugada de la PC
-                  ganador = comprobarGanador(tablero, opcionesGanadoras);
                   if (ganador) {
-                    alert("Ganador: " + ganador);
+                    mostrarModal(ganador);
                     clearInterval(idIntervalo);
                     clearInterval(idIntervalo2);
-                    removeEventListener("click", () => {});
                     sumarHistorial(ganador);
+                    removeEventListener("click", () => {});
+                    empezarJuego.classList.remove("empezado");
                   }
                 }, 100);
               }
             }, 100);
             // Si hay 3 X, se elimina una X
-          } else if (numeroX.length === 3 && casilla.textContent === "❌") {
-            let celda = casilla.getAttribute("data-celda");
+          } else if (numeroX.length >= 3 && casilla.textContent === "❌" && !terminado && jugador === "❌") {
+            celda = casilla.getAttribute("data-celda");
+            console.log(celda);
             casilla.textContent = "";
-            if (tablero[celda] === "❌") {
-              tablero[celda] = "";
-              numeroX = casillas.filter(
-                (casilla) => casilla.textContent === "❌"
-              );
-              numeroO = casillas.filter(
-                (casilla) => casilla.textContent === "⭕"
-              );
-            }
+            tablero[celda] = "";
+            numeroX = actualizarNumeroX(tablero);
           }
-        }, 100);
       })
     );
   }
   // Modo 5: 1vs1 y 9 fichas
   else if (modo === "3" && fichas === "9") {
     casillas.forEach((casilla) =>
-      casilla.addEventListener("click", () => {
-        if (ganador == null && jugador == "❌" && casilla.textContent == "") {
-          jugadaJugador(casilla, tablero, jugador);
-          ganador = comprobarGanador(tablero, opcionesGanadoras);
-          setTimeout(() => {
-            if (ganador) {
-              alert("Ganador: " + ganador);
-              clearInterval(idIntervalo);
-              clearInterval(idIntervalo2);
-              removeEventListener("click", () => {});
-              sumarHistorial(ganador);
-            } else {
-              jugador = "⭕";
-              turno.textContent = jugador;
-              contadorTurno(30, tiempoTurno, jugador);
-              casillas.forEach((casilla) =>
-                casilla.addEventListener("click", () => {
-                  if (
-                    ganador === null &&
-                    jugador === "⭕" &&
-                    casilla.textContent === ""
-                  ) {
-                    jugadaJugador(casilla, tablero, jugador);
-                    ganador = comprobarGanador(tablero, opcionesGanadoras);
-                    setTimeout(() => {
-                      if (ganador) {
-                        alert("Ganador: " + ganador);
-                        clearInterval(idIntervalo);
-                        clearInterval(idIntervalo2);
-                        removeEventListener("click", () => {});
-                        sumarHistorial(ganador);
-                      } else {
-                        jugador = "❌";
-                        turno.textContent = jugador;
-                        contadorTurno(30, tiempoTurno, jugador);
-                      }
-                    }, 100);
-                  }
-                })
-              );
-            }
-          }, 100);
+  casilla.addEventListener("click", () => {
+    if (ganador === null && casilla.textContent === "" && !terminado) {
+      jugadaJugador(casilla, tablero, jugador);
+      ganador = comprobarGanador(tablero, opcionesGanadoras);
+      console.log(ganador);
+      setTimeout(() => {
+        if (ganador) {
+          mostrarModal(ganador);
+          clearInterval(idIntervalo);
+          clearInterval(idIntervalo2);
+          sumarHistorial(ganador);
+          removeEventListener("click", () => {});
+          empezarJuego.classList.remove("empezado");
+        } else {
+          jugador = jugador === "❌" ? "⭕" : "❌";
+          turno.textContent = jugador;
+          contadorTurno(30, tiempoTurno, jugador);
         }
-      })
-    );
+      }, 100);
+    }
+  })
+);
   } else if (modo === "3" && fichas === "6") {
+    let celdaX = null;
+    let celdaO = null;
     casillas.forEach((casilla) =>
       casilla.addEventListener("click", () => {
-        let numeroO = casillas.filter(
-          (casilla) => casilla.textContent === "⭕"
-        );
-        let numeroX = casillas.filter(
-          (casilla) => casilla.textContent === "❌"
-        );
+        let numeroO = actualizarNumeroO(tablero);
+        let numeroX = actualizarNumeroX(tablero);
         if (
           ganador === null &&
           jugador === "❌" &&
           casilla.textContent === "" &&
-          numeroX.length < 3
+          numeroX.length < 3 &&
+          celdaX !== casilla.getAttribute("data-celda") &&
+          !terminado
         ) {
           jugadaJugador(casilla, tablero, jugador);
+          numeroX = actualizarNumeroX(tablero);
           ganador = comprobarGanador(tablero, opcionesGanadoras);
           setTimeout(() => {
             if (ganador) {
-              alert("Ganador: " + ganador);
+              mostrarModal(ganador);
               clearInterval(idIntervalo);
               clearInterval(idIntervalo2);
-              removeEventListener("click", () => {});
               sumarHistorial(ganador);
-            }else{
+              removeEventListener("click", () => {});
+              empezarJuego.classList.remove("empezado");
+            } else {
               jugador = "⭕";
-              turno.textContent = "⭕";
+              turno.textContent = jugador;
               contadorTurno(30, tiempoTurno, jugador);
-              casillas.forEach((casilla) =>
-              casilla.addEventListener("click", () => {
-                if(ganador === null && jugador === "⭕" && casilla.textContent === "" && numeroO.length < 3){
-                  jugadaJugador(casilla, tablero, jugador);
-                  ganador = comprobarGanador(tablero, opcionesGanadoras);
-                  setTimeout(() => {
-                    if (ganador) {
-                      alert("Ganador: " + ganador);
-                      clearInterval(idIntervalo);
-                      clearInterval(idIntervalo2);
-                      removeEventListener("click", () => {});
-                      sumarHistorial(ganador);
-                    }else{
-                      jugador = "❌";
-                      turno.textContent = jugador;
-                      contadorTurno(30, tiempoTurno, jugador);
-                    }
-                  }, 100);
-                }else if(numeroO.length === 3 && casilla.textContent === "⭕" && jugador === "⭕"){
-                  let celda = casilla.getAttribute("data-celda");
-                  casilla.textContent = "";
-                  if (tablero[celda] === "⭕") {
-                    tablero[celda] = "";
-                    numeroX = casillas.filter(
-                      (casilla) => casilla.textContent === "❌"
-                    );
-                    numeroO = casillas.filter(
-                      (casilla) => casilla.textContent === "⭕"
-                    );
-                  }
-                }
-              })
-              )
             }
-          }, 100);
-        } else if (numeroX.length === 3 && casilla.textContent === "❌" && jugador === "❌") {
-          let celda = casilla.getAttribute("data-celda");
+          }, 0);
+        } else if (
+          numeroX.length >= 3 &&
+          casilla.textContent === "❌" &&
+          jugador === "❌" &&
+          !terminado
+        ) {
+          celdaX = casilla.getAttribute("data-celda");
           casilla.textContent = "";
-          if (tablero[celda] === "❌") {
-            tablero[celda] = "";
-            numeroX = casillas.filter(
-              (casilla) => casilla.textContent === "❌"
-            );
-            numeroO = casillas.filter(
-              (casilla) => casilla.textContent === "⭕"
-            );
-          }
+          tablero[celdaX] = "";
+          numeroX = actualizarNumeroX(tablero);
+        } else if (
+          ganador === null &&
+          jugador === "⭕" &&
+          casilla.textContent === "" &&
+          numeroO.length <= 2 &&
+          celdaO !== casilla.getAttribute("data-celda") &&
+          !terminado
+        ) {
+          jugadaJugador(casilla, tablero, jugador);
+          numeroO = actualizarNumeroO(tablero);
+          ganador = comprobarGanador(tablero, opcionesGanadoras);
+          setTimeout(() => {
+            if (ganador) {
+              mostrarModal(ganador);
+              clearInterval(idIntervalo);
+              clearInterval(idIntervalo2);
+              sumarHistorial(ganador);
+              removeEventListener("click", () => {});
+              empezarJuego.classList.remove("empezado");
+            } else {
+              jugador = "❌";
+              turno.textContent = jugador;
+              contadorTurno(30, tiempoTurno, jugador);
+            }
+          }, 0);
+        } else if (
+          numeroO.length >= 3 &&
+          casilla.textContent === "⭕" &&
+          jugador === "⭕" &&
+          !terminado
+        ) {
+          celdaO = casilla.getAttribute("data-celda");
+          casilla.textContent = "";
+          tablero[celdaO] = "";
+          numeroO = actualizarNumeroO(tablero);
         }
       })
     );
@@ -453,34 +451,4 @@ document.getElementById("volverMenu").addEventListener("click", () => {
   window.location.href = "../menu.html";
 });
 
-// Funcion para la jugada del jugador
-function jugadaJugador(casilla, tablero, jugador) {
-  casilla.textContent = jugador;
-  let celda = casilla.getAttribute("data-celda");
-  tablero[celda] = jugador;
-}
 
-function sumarHistorial(ganador) {
-  let victorias_X = parseInt(victoriasX.textContent);
-  let derrotas_X = parseInt(derrotasX.textContent);
-  let victorias_O = parseInt(victoriasO.textContent);
-  let derrotas_O = parseInt(derrotasO.textContent);
-  if (ganador === "❌") {
-    victorias_X++;
-    derrotas_O++;
-    victoriasX.textContent = victorias_X;
-    derrotasO.textContent = derrotas_O;
-  } else if (ganador === "⭕") {
-    victorias_O++;
-    derrotas_X++;
-    victoriasO.textContent = victorias_O;
-    derrotasX.textContent = derrotas_X;
-  }
-}
-
-function reiniciarHistorial() {
-  victoriasX.textContent = 0;
-  victoriasO.textContent = 0;
-  derrotasX.textContent = 0;
-  derrotasO.textContent = 0;
-}

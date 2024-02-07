@@ -1,3 +1,5 @@
+import { mostrarModal } from "./modal.js";
+
 const url = window.location.href;
 const urlSplit = url.split("?")[1].split("&");
 
@@ -24,19 +26,22 @@ export function comprobarGanador(tablero, opcionesGanadoras) {
 }
 
 export let idIntervalo;
+export let terminado;
 export function contadorTurno(t, div, jugador) {
+  terminado = false;
   clearInterval(idIntervalo);
   div.textContent = "00:30";
   let tiempo = t;
   idIntervalo = setInterval(() => {
     tiempo--;
     if (tiempo < 0) {
+      terminado = true;
       if(jugador === "❌"){
         clearInterval(idIntervalo);
-        alert("Ganador: ⭕");
+        mostrarModal("⭕");
       }else{
         clearInterval(idIntervalo);
-        alert("Ganador: ❌");
+        mostrarModal("❌");
       }
     }else{
       const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
@@ -54,11 +59,13 @@ export function contadorJuego(t, div, jugador) {
     tiempo--;
     if (tiempo < 0) {
       if(jugador === "❌"){
-        alert("Ganador: ⭕");
+        mostrarModal("⭕");
         clearInterval(idIntervalo2);
+        removeEventListener("click", {});
       }else{
-        alert("Ganador: ❌");
+        mostrarModal("❌");
         clearInterval(idIntervalo2);
+        removeEventListener("click", {});
       }
     }else{
       const minutes = Math.floor(tiempo / 60).toString().padStart(2, '0');
@@ -66,4 +73,61 @@ export function contadorJuego(t, div, jugador) {
       div.textContent = `${minutes}:${seconds}`;
     }
   }, 1000);
+}
+
+// Funcion para la jugada del jugador
+export function jugadaJugador(casilla, tablero, jugador) {
+  casilla.textContent = jugador;
+  let celdaX = casilla.getAttribute("data-celda");
+  tablero[celdaX] = jugador;
+}
+
+const victoriasX = document.getElementById("victoriasX");
+const victoriasO = document.getElementById("victoriasO");
+const derrotasX = document.getElementById("derrotasX");
+const derrotasO = document.getElementById("derrotasO");
+
+ export function sumarHistorial(ganador) {
+  let victorias_X = parseInt(victoriasX.textContent);
+  let derrotas_X = parseInt(derrotasX.textContent);
+  let victorias_O = parseInt(victoriasO.textContent);
+  let derrotas_O = parseInt(derrotasO.textContent);
+  if (ganador === "❌") {
+    victorias_X++;
+    derrotas_O++;
+    victoriasX.textContent = victorias_X;
+    derrotasO.textContent = derrotas_O;
+  } else if (ganador === "⭕") {
+    victorias_O++;
+    derrotas_X++;
+    victoriasO.textContent = victorias_O;
+    derrotasX.textContent = derrotas_X;
+  }
+}
+
+export function reiniciarHistorial() {
+  victoriasX.textContent = 0;
+  victoriasO.textContent = 0;
+  derrotasX.textContent = 0;
+  derrotasO.textContent = 0;
+}
+
+export function actualizarNumeroX(tablero){
+  let numeroX = [];
+  for (let i = 0; i < tablero.length; i++) {
+    if (tablero[i] === "❌") {
+      numeroX.push(i);
+    }
+  }
+  return numeroX;
+}
+
+export function actualizarNumeroO(tablero){
+  let numeroO = [];
+  for (let i = 0; i < tablero.length; i++) {
+    if (tablero[i] === "⭕") {
+      numeroO.push(i);
+    }
+  }
+  return numeroO;
 }

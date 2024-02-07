@@ -26,23 +26,28 @@
         </div>
       </div>
 
-      <div class="tiempo-turno">
-        <div class="tiempo">
-          <div class="titulo">Tiempo</div>
-          <div class="valor" id="tiempo">03:00</div>
+      <div class="tipo-turno">
+        <div class="tipo">
+          <h1 id="modoJuego"></h1>
         </div>
-
-        <div class="tiempo-jugador">
-          <div class="titulo">Tiempo <span>Jugador 1</span></div>
-          <div class="valor" id="tiempo-jugador">00:30</div>
+        <div class="tiempo-turno">
+          <div class="tiempo">
+            <div class="titulo">Tiempo</div>
+            <div class="valor" id="tiempo">03:00</div>
+          </div>
+  
+          <div class="tiempo-jugador">
+            <div class="titulo">Tiempo Turno</div>
+            <div class="valor" id="tiempo-jugador">00:30</div>
+          </div>
+  
+          <div class="turno">
+            <div class="titulo">Turno</div>
+            <div class="valor" id="turno"></div>
+          </div>
+  
+          <button class="empezar" id="empezar-juego">Empezar Partida</button>
         </div>
-
-        <div class="turno">
-          <div class="titulo">Turno</div>
-          <div class="valor" id="turno"></div>
-        </div>
-
-        <button class="empezar" id="empezar-juego">Empezar Partida</button>
       </div>
     </div>
 
@@ -83,6 +88,18 @@
         </div>
       </div>
     </div>
+
+    <div id="modal-ganador">
+      <div class="modal">
+        <h2 id="resultado">Ganador</h2>
+        <div id="ganador">
+          ❌
+        </div>
+        <button id="cerrarModal">Cerrar</button>
+      </div>
+    </div>
+
+    <div id="blur"></div>
 
     <script type="module" src="js/juego.js"></script>
   </body>

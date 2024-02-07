@@ -1,98 +1,102 @@
-const GANADOR_X = -10;
-const GANADOR_O = 10;
+import {comprobarGanador} from "./funcionesUtiles.js";
+
+const GANADOR_X = -1;
+const GANADOR_O = 20;
 
 function evaluar(tablero, opcionesGanadoras) {
-    for (let i = 0; i < opcionesGanadoras.length; i++) {
-      let [a, b, c] = opcionesGanadoras[i];
-      if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
-        return tablero[a];
-      }
+  for (let i = 0; i < opcionesGanadoras.length; i++) {
+    let [a, b, c] = opcionesGanadoras[i];
+    if (tablero[a] && tablero[a] === tablero[b] && tablero[a] === tablero[c]) {
+      return tablero[a];
     }
-    return null;
   }
+  return null;
+}
 
 function cambiarJugador(jugador) {
-  return jugador === "❌" ? "⭕" : "❌";
+return jugador === "❌" ? "⭕" : "❌";
 }
 
 function movimientosPosibles(tablero) {
-  return tablero.reduce((movimientos, casilla, index) => {
-    if (casilla === "") {
-      movimientos.push(index);
-    }
-    return movimientos;
-  }, []);
+return tablero.reduce((movimientos, casilla, index) => {
+  if (casilla === "") {
+    movimientos.push(index);
+  }
+  return movimientos;
+}, []);
 }
 
-
 // Función principal del algoritmo Minimax
-function minimax(tablero, jugador, esMaximizado, opcionesGanadoras) {
-    // Evaluar si hay un ganador en el tablero actual
-    let ganador = evaluar(tablero, opcionesGanadoras);
-    
-    // Si hay un ganador, devolver la puntuación correspondiente
-    if (ganador === "❌") {
-      return GANADOR_X;
-    } else if (ganador === "⭕") {
-      return GANADOR_O;
-    }
-  
-    // Si el tablero está lleno y no hay ganador, es un empate
-    if (movimientosPosibles(tablero).length === 0) {
-      return 0;
-    }
-  
-    // Lógica para el jugador maximizador (❌)
-    if (esMaximizado) {
-      let mejorPuntuacion = -Infinity;
-      // Iterar sobre cada posición posible en el tablero
-      for (let i = 0; i < tablero.length; i++) {
-        // Verificar si la casilla está vacía
-        if (tablero[i] === "") {
-          // Hacer la jugada en la casilla actual
-          tablero[i] = jugador;
-          // Llamar recursivamente a minimax con el jugador cambiado y marcando que ahora es el turno del oponente
-          let puntuacion = minimax(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
-          // Deshacer la jugada para explorar otras posibilidades
-          tablero[i] = "";
-          // Actualizar la mejor puntuación con la puntuación máxima obtenida
-          mejorPuntuacion = Math.max(mejorPuntuacion, puntuacion);
-        }
-      }
-      // Devolver la mejor puntuación encontrada
-      return mejorPuntuacion;
-    } 
-    // Lógica para el jugador minimizador (⭕)
-    else {
-      let mejorPuntuacion = Infinity;
-      for (let i = 0; i < tablero.length; i++) {
-        if (tablero[i] === "") {
-          tablero[i] = jugador;
-          let puntuacion = minimax(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
-          tablero[i] = "";
-          mejorPuntuacion = Math.min(mejorPuntuacion, puntuacion);
-        }
-      }
-      return mejorPuntuacion;
-    }
+function minimax(tablero, jugador, esMaximizado, opcionesGanadoras, alfa, beta) {
+  let ganador = evaluar(tablero, opcionesGanadoras);
+
+  if (ganador === "❌") {
+    return GANADOR_X;
+  } else if (ganador === "⭕") {
+    return GANADOR_O;
   }
+
+  if (movimientosPosibles(tablero).length === 0) {
+    return 0;
+  }
+
+  if (esMaximizado) {
+    let mejorPuntuacion = -Infinity;
+    for (let i = 0; i < tablero.length; i++) {
+      if (tablero[i] === "") {
+        tablero[i] = jugador;
+        let puntuacion = minimax(tablero, cambiarJugador(jugador), false, opcionesGanadoras, alfa, beta);
+        tablero[i] = "";
+        mejorPuntuacion = Math.max(mejorPuntuacion, puntuacion);
+        alfa = Math.max(alfa, puntuacion);
+        if (beta <= alfa) {
+          break;
+        }
+      }
+    }
+    return mejorPuntuacion;
+  } else {
+    let mejorPuntuacion = Infinity;
+    for (let i = 0; i < tablero.length; i++) {
+      if (tablero[i] === "") {
+        tablero[i] = jugador;
+        let puntuacion = minimax(tablero, cambiarJugador(jugador), true, opcionesGanadoras, alfa, beta);
+        tablero[i] = "";
+        mejorPuntuacion = Math.min(mejorPuntuacion, puntuacion);
+        beta = Math.min(beta, puntuacion);
+        if (beta <= alfa) {
+          break;
+        }
+      }
+    }
+    return mejorPuntuacion;
+  }
+}
   
   // Función que encuentra el mejor movimiento para un jugador dado
-  export function mejorMovimiento(tablero, jugador, opcionesGanadoras) {
+  export function mejorMovimiento(tablero, jugador, opcionesGanadoras, casillas) {
     let mejorPuntuacion = -Infinity;
     let movimiento = null;
+    let alfa = -Infinity;
+    let beta = Infinity;
+
+
+      // Prueba cada casilla vacía para ver si es un movimiento ganador
+      for (let j = 0; j < tablero.length; j++) {
+        if (tablero[j] === "") {
+          tablero[j] = jugador;
+          if (comprobarGanador(tablero, opcionesGanadoras) === jugador) {
+            return j; // Si hay un movimiento ganador, la IA lo hace y termina la función
+          }
+          tablero[j] = "";
+        }
+      }
   
-    // Iterar sobre cada posición posible en el tablero
     for (let i = 0; i < tablero.length; i++) {
-      // Verificar si la casilla está vacía
       if (tablero[i] === "") {
-        // Hacer la jugada en la casilla actual
         tablero[i] = jugador;
-        // Llamar a minimax para evaluar la puntuación de la jugada
-        let puntuacion = minimax(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
-        // Deshacer la jugada para explorar otras posibilidades
+        let puntuacion = minimax(tablero, cambiarJugador(jugador), false, opcionesGanadoras, alfa, beta);
         tablero[i] = "";
-        // Actualizar la mejor puntuación y el movimiento si se encuentra una puntuación mejor
         if (puntuacion > mejorPuntuacion) {
           mejorPuntuacion = puntuacion;
           movimiento = i;
@@ -100,96 +104,126 @@ function minimax(tablero, jugador, esMaximizado, opcionesGanadoras) {
       }
     }
   
-    // Devolver el mejor movimiento encontrado
     return movimiento;
   }
 
 
+  export function IA(tablero, jugador, casillas, opcionesGanadoras){
+    // Filtra las casillas ocupadas por el jugador O
+    let casillas_O = casillas.filter((casilla) => casilla.textContent === "⭕").map((casilla) => casilla.getAttribute("data-celda"));
 
+    // Comprueba si hay un movimiento ganador disponible
+    for (let i = 0; i < casillas_O.length; i++) {
+      let celdaARemover = casillas_O[i];
+      tablero[celdaARemover] = "";
+      casillas[celdaARemover].textContent = "";
 
+      // Prueba cada casilla vacía para ver si es un movimiento ganador
+      for (let j = 0; j < tablero.length; j++) {
+        if (tablero[j] === "") {
+          tablero[j] = jugador;
+          if (comprobarGanador(tablero, opcionesGanadoras) === jugador) {
+            casillas[j].textContent = jugador;
+            return; // Si hay un movimiento ganador, la IA lo hace y termina la función
+          }
+          tablero[j] = "";
+        }
+      }
 
-  export function mejorMovimiento6Fichas(tablero, jugador, opcionesGanadoras) {
-    let mejorPuntuacion = -Infinity;
+      tablero[celdaARemover] = jugador;
+      casillas[celdaARemover].textContent = jugador;
+    }
+
+    // Si no hay un movimiento ganador disponible, la IA sigue con su estrategia normal
     let mejorMovimiento = null;
-  
-    // Generar todos los movimientos posibles
-    for (let i = 0; i < tablero.length; i++) {
-      if (tablero[i] === jugador) {
+    let mejorPuntuacion = -Infinity;
+
+    // Evalúa cada casilla ocupada por el jugador O
+    for (let i = 0; i < casillas_O.length; i++) {
+      let celdaARemover = Number(casillas_O[i]);
+      tablero[celdaARemover] = "";
+
+      // Evalúa si hay dos fichas del jugador X en una línea ganadora
+      if(evaluarDosFichas(tablero, opcionesGanadoras) === "❌"){
+        // Prueba cada casilla vacía para ver si es un movimiento ganador o bloqueador
         for (let j = 0; j < tablero.length; j++) {
-          if (tablero[j] === "") {
-            // Realizar el movimiento
-            tablero[i] = "";
+          if (tablero[j] === "" && j !== celdaARemover) {
             tablero[j] = jugador;
-  
-            // Evaluar la puntuación de este movimiento
-            let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
-  
-            // Deshacer el movimiento
-            tablero[j] = "";
-            tablero[i] = jugador;
-  
-            // Actualizar la mejor puntuacion y el movimiento si se encuentra una puntuacion mejor
-            if (resultado.puntuacion > mejorPuntuacion) {
-              console.log(resultado);
-              mejorPuntuacion = resultado.puntuacion;
-              mejorMovimiento = { quitar: i, poner: j };
+            let puntuacion;
+            let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
+
+            // Asigna una puntuación en función del resultado del movimiento
+            if(ganador === "❌"){
+              puntuacion = -1;
+            }else if(ganador === "⭕"){
+              puntuacion = 1;
+            }else{
+              puntuacion = 0;
             }
+            
+            if (puntuacion > mejorPuntuacion) {
+              mejorPuntuacion = puntuacion;
+              mejorMovimiento = [celdaARemover, j];
+            }
+            tablero[j] = "";
+          }
+        }
+      }else{
+        for (let j = 0; j < tablero.length; j++) {
+          if (tablero[j] === "" && j !== celdaARemover) {
+            tablero[j] = jugador;
+            let puntuacion;
+            let ganador = evaluarDosFichas(tablero, opcionesGanadoras);
+
+            // Asigna una puntuación en función del resultado del movimiento
+            if(ganador === "❌"){
+              puntuacion = -1;
+            }else if(ganador === "⭕"){
+              puntuacion = 1;
+            }else{
+              puntuacion = 0;
+            }
+            
+            if (puntuacion > mejorPuntuacion) {
+              mejorPuntuacion = puntuacion;
+              mejorMovimiento = [celdaARemover, j];
+            }
+            tablero[j] = "";
           }
         }
       }
+      tablero[celdaARemover] = jugador;
     }
-  
-    // Devolver el mejor movimiento
-    return mejorMovimiento;
-  }
-  
-  
-  // Función principal del algoritmo Minimax
-  function minimax6Fichas(tablero, jugador, esMaximizado, opcionesGanadoras) {
-    // Evaluar si hay un ganador en el tablero actual
-    let ganador = evaluar(tablero, opcionesGanadoras);
-    
-    // Si hay un ganador, devolver la puntuación correspondiente
-    if (ganador === "❌") {
-      return { puntuacion: GANADOR_X, movimiento: null };
-    } else if (ganador === "⭕") {
-      return { puntuacion: GANADOR_O, movimiento: null };
-    } else if (ganador === null && tablero.every(casilla => casilla !== "")) {
-      return { puntuacion: 0, movimiento: null };
+
+    // Realiza el mejor movimiento encontrado
+    if (mejorMovimiento) {
+      tablero[mejorMovimiento[0]] = "";
+      casillas[mejorMovimiento[0]].textContent = "";
+      tablero[mejorMovimiento[1]] = jugador;
+      casillas[mejorMovimiento[1]].textContent = jugador;
     }
-  
-      // Lógica para el jugador maximizador (❌)
-    if (esMaximizado) {
-      let mejorPuntuacion = -Infinity;
-      let mejorMovimiento = null;
-      for (let i = 0; i < tablero.length; i++) {
-        if (tablero[i] === "") {
-          tablero[i] = jugador;
-          let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), false, opcionesGanadoras);
-          tablero[i] = "";
-          if (resultado.puntuacion > mejorPuntuacion || mejorMovimiento === null) {
-            mejorPuntuacion = resultado.puntuacion;
-            mejorMovimiento = i;
-          }
-        }
-      }
-      return { puntuacion: mejorPuntuacion, movimiento: mejorMovimiento };
-    } 
-     // Lógica para el jugador minimizador (⭕)
-     else {
-      let mejorPuntuacion = Infinity;
-      let mejorMovimiento = null;
-      for (let i = 0; i < tablero.length; i++) {
-        if (tablero[i] === "") {
-          tablero[i] = jugador;
-          let resultado = minimax6Fichas(tablero, cambiarJugador(jugador), true, opcionesGanadoras);
-          tablero[i] = "";
-          if (resultado.puntuacion < mejorPuntuacion || mejorMovimiento === null) {
-            mejorPuntuacion = resultado.puntuacion;
-            mejorMovimiento = i;
-          }
-        }
-      }
-      return { puntuacion: mejorPuntuacion, movimiento: mejorMovimiento };
+}
+
+// Evalúa si hay dos fichas del mismo jugador en una línea ganadora
+function evaluarDosFichas(tablero, opcionesGanadoras) {
+  // Comprueba las líneas ganadoras para el jugador "X"
+  for (let i = 0; i < opcionesGanadoras.length; i++) {
+    let [a, b, c] = opcionesGanadoras[i];
+    if ((tablero[a] === '❌' && tablero[b] === '❌' && !tablero[c]) ||
+        (tablero[a] === '❌' && !tablero[b] && tablero[c] === '❌') ||
+        (!tablero[a] && tablero[b] === '❌' && tablero[c] === '❌')) {
+      return '❌';
     }
   }
+
+  // Comprueba las líneas ganadoras para el jugador "O"
+  for (let i = 0; i < opcionesGanadoras.length; i++) {
+    let [a, b, c] = opcionesGanadoras[i];
+    if ((tablero[a] === '⭕' && tablero[b] === '⭕' && !tablero[c]) ||
+        (tablero[a] === '⭕' && !tablero[b] && tablero[c] === '⭕') ||
+        (!tablero[a] && tablero[b] === '⭕' && tablero[c] === '⭕')) {
+      return '⭕';
+    }
+  }
+  return null;
+}
