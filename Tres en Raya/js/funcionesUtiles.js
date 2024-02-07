@@ -82,6 +82,11 @@ export function jugadaJugador(casilla, tablero, jugador) {
   tablero[celdaX] = jugador;
 }
 
+const victoriasX = document.getElementById("victoriasX");
+const victoriasO = document.getElementById("victoriasO");
+const derrotasX = document.getElementById("derrotasX");
+const derrotasO = document.getElementById("derrotasO");
+
  export function sumarHistorial(ganador) {
   let victorias_X = parseInt(victoriasX.textContent);
   let derrotas_X = parseInt(derrotasX.textContent);

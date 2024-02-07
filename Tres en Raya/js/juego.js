@@ -18,10 +18,6 @@ import { mejorMovimiento, IA } from "./1vsIA.js";
 import { mostrarModal } from "./modal.js";
 
 const modoJuego = document.getElementById("modoJuego");
-const victoriasX = document.getElementById("victoriasX");
-const victoriasO = document.getElementById("victoriasO");
-const derrotasX = document.getElementById("derrotasX");
-const derrotasO = document.getElementById("derrotasO");
 const tiempoTurno = document.getElementById("tiempo-jugador");
 const tiempoJuego = document.getElementById("tiempo");
 const empezarJuego = document.getElementById("empezar-juego");
