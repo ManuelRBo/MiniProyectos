@@ -426,7 +426,7 @@ document.getElementById("reiniciarHistorial").addEventListener("click", () => {
 });
 
 document.getElementById("volverMenu").addEventListener("click", () => {
-  window.location.href = "../menu.html";
+  window.location.href = "../index.html";
 });
 
 // Funcion para la jugada del jugador
