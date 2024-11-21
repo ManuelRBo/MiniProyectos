@@ -3,12 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Weather App</title>
 </head>
 <body>
-    <h1>Tiempo</h1>
+    <div class="contenedor-principal">
+        <h1>Tiempo</h1>
+        <p>Introduzca el nombre de la ciudad para ver el tiempo</p>
+        <form id="formulario">
+            <input type="text" name="ciudad" id="ciudad" placeholder="Introduzca la ciudad">
+            <button>Buscar</button>
+        </form>
 
-    form
+        <div class="resultado" id="resultado">
+            <span class="loader-none" id="loader"></span>
+
+            <p class="error-none" id="error">Ciudad no encontrada</p>
+
+            <div class="resultado-datos-none" id="resultado-datos">
+                <h2 id="ciudad-nombre"></h2>
+                <p id="ciudad-temperatura"></p>
+                <p id="ciudad-sensacion">Sensacion termica: </p>
+                <div class="max-min">
+                    <p id="ciudad-max">Max. </p>
+                    <p id="ciudad-min">Min. </p>
+                </div>
+                <p id="ciudad-humedad">Humedad: </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
